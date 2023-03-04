@@ -1,8 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-dsadadsa
-import Landing from "./pages/Landing";
-afnkaefnoasnaslmdsa;
+import Landing from "./pages/Landing Page/Landing";
 import { database } from "./firebase";
 
 function App() {
