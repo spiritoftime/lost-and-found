@@ -112,12 +112,12 @@ const Register = () => {
             </RoundButton>
           </form>
           <div className="mx-auto flex gap-2">
-            <p>New User?</p>
+            <p>Existing User?</p>
             <a
               href="login"
               className="cursor-pointer text-rose-500 decoration rose-500 underline underline-offset-4 font-medium"
             >
-              Sign Up Now!
+              Login Now!
             </a>
           </div>
         </div>
