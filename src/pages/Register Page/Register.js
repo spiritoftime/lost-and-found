@@ -1,5 +1,4 @@
 import React from "react";
-import { Form } from "react-router-dom";
 import FormLabel from "../../components/FormLabel";
 import RoundButton from "../../components/RoundButton";
 import SquareFormInput from "../../components/SquareFormInput";
@@ -7,8 +6,9 @@ import retriever from "../../images/golden-retriever.jfif";
 import google from "../../images/google__icon.png";
 import OrDivider from "./OrDivider";
 import { useForm } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
-import { YupLoginSchema } from "./YupLoginSchema";
+import { YupAuthSchema } from "./YupAuthSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import {
   GoogleAuthProvider,
   getAuth,
@@ -18,7 +18,12 @@ import {
 } from "firebase/auth";
 import { useAppContext } from "../../context/appContext";
 import { getDatabase, ref, set } from "firebase/database";
-const Login = () => {
+const Register = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(YupAuthSchema) });
   const db = getDatabase();
   const { setAuthDetails } = useAppContext();
   const provider = new GoogleAuthProvider();
@@ -41,7 +46,28 @@ const Login = () => {
         console.log("failed to login", error);
       });
   };
-  const loginWithEmailAndPassword = () => {};
+
+  const SignUpWithEmailAndPassword = (e) => {
+    createUserWithEmailAndPassword(auth, e.email, e.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        setAuthDetails({
+          userUID: user.uid,
+          username: user.email,
+        });
+        set(ref(db, "users/" + user.uid), {
+          username: user.email,
+          profileUrl: user.photoURL,
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        // ..
+      });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="flex max-w-[600px]">
@@ -59,23 +85,36 @@ const Login = () => {
           </RoundButton>
           <OrDivider />
           <form
-            onSubmit={loginWithEmailAndPassword}
+            noValidate
+            onSubmit={handleSubmit(SignUpWithEmailAndPassword)}
             className="flex flex-col gap-4"
           >
             <div className="flex flex-col gap-2">
               <FormLabel htmlFor={"email"} label="Email" />
-              <SquareFormInput id="email" type="email" />
+              <SquareFormInput
+                register={register}
+                errors={errors}
+                id="email"
+                type="email"
+              />
             </div>
             <div className="flex flex-col gap-2">
-              <FormLabel htmlFor={"password"} label="password" />
-              <SquareFormInput id="password" type="password" />
+              <FormLabel htmlFor={"password"} label="Password" />
+              <SquareFormInput
+                register={register}
+                errors={errors}
+                id="password"
+                type="password"
+              />
             </div>
-            <RoundButton bgColorClass="bg-[#FCC419]">Login</RoundButton>
+            <RoundButton type="submit" bgColorClass="bg-[#FCC419]">
+              Login
+            </RoundButton>
           </form>
           <div className="mx-auto flex gap-2">
             <p>New User?</p>
             <a
-              href="signup"
+              href="login"
               className="cursor-pointer text-rose-500 decoration rose-500 underline underline-offset-4 font-medium"
             >
               Sign Up Now!
@@ -84,7 +123,7 @@ const Login = () => {
         </div>
         <img
           alt="happy golden retriever"
-          className="aspect-square"
+          className=" object-cover"
           src={retriever}
         />
       </div>
@@ -92,4 +131,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

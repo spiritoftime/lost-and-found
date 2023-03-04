@@ -12,7 +12,7 @@ const RoundButton = ({
   if (borderColorClass) classes += ` ${borderColorClass}`;
   if (hoverColorClass) classes += ` ${hoverColorClass}`;
   return (
-    <button onClick={onClick} className={classes}>
+    <button type="submit" onClick={onClick} className={classes}>
       {children}
     </button>
   );
