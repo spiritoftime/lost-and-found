@@ -1,10 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
+import { database } from "./firebase";
 
 function App() {
   return (
     <div className="App">
-      <header className= "w-[900px]" >
+      <header className="w-[900px]">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
