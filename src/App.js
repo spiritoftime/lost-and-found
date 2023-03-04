@@ -2,11 +2,27 @@ import logo from "./logo.svg";
 import "./App.css";
 dsadadsa
 import Landing from "./pages/Landing";
- 
-function App() {
+afnkaefnoasnaslmdsa;
+import { database } from "./firebase";
 
+function App() {
   return (
-  <Landing/>
+    <div className="App">
+      <header className="w-[900px]">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
