@@ -8,22 +8,22 @@ import OrDivider from "./OrDivider";
 import { useForm } from "react-hook-form";
 import { YupAuthSchema } from "./YupAuthSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { getDatabase, ref, child, get } from "firebase/database";
 import {
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
-  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useAppContext } from "../../context/appContext";
-import { getDatabase, ref, set } from "firebase/database";
-const Register = () => {
+
+const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(YupAuthSchema) });
-  const db = getDatabase();
+  const dbRef = ref(getDatabase());
   const { setAuthDetails } = useAppContext();
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
@@ -36,29 +36,28 @@ const Register = () => {
           profileUrl: user.photoURL,
           name: user.displayName,
         });
-        set(ref(db, "users/" + user.uid), {
-          username: user.displayName,
-          profileUrl: user.photoURL,
-        });
       })
       .catch((error) => {
         console.log("failed to login", error);
       });
   };
 
-  const SignUpWithEmailAndPassword = (e) => {
-    createUserWithEmailAndPassword(auth, e.email, e.password)
+  const LoginWithEmailAndPassword = (e) => {
+    signInWithEmailAndPassword(auth, e.email, e.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        setAuthDetails({
-          userUID: user.uid,
-          username: user.email,
-        });
-        set(ref(db, "users/" + user.uid), {
-          username: user.email,
-          profileUrl: user.photoURL,
-        });
+        get(child(dbRef, `users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setAuthDetails(snapshot.val());
+            } else {
+              console.log("No data available");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -85,7 +84,7 @@ const Register = () => {
           <OrDivider />
           <form
             noValidate
-            onSubmit={handleSubmit(SignUpWithEmailAndPassword)}
+            onSubmit={handleSubmit(LoginWithEmailAndPassword)}
             className="flex flex-col gap-4"
           >
             <div className="flex flex-col gap-2">
@@ -111,12 +110,12 @@ const Register = () => {
             </RoundButton>
           </form>
           <div className="mx-auto flex gap-2">
-            <p>Existing User?</p>
+            <p>New User?</p>
             <a
               href="login"
               className="cursor-pointer text-rose-500 decoration rose-500 underline underline-offset-4 font-medium"
             >
-              Login Now!
+              Sign Up Now!
             </a>
           </div>
         </div>
@@ -130,4 +129,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

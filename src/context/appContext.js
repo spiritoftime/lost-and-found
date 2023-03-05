@@ -14,7 +14,7 @@ const test = () => {
 const AppProvider = ({ children }) => {
   const [authDetails, setAuthDetails] = useState({});
   return (
-    <AppContext.Provider value={{ setAuthDetails }}>
+    <AppContext.Provider value={{ authDetails, setAuthDetails }}>
       {children}
     </AppContext.Provider>
   );
