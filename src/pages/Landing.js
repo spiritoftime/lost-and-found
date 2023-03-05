@@ -1,15 +1,13 @@
 import React from 'react'
 import { useAppContext } from '../context/appContext'
-
+import Report from './Report'
 
 const Landing = () => {
-    const { test} = useAppContext()
-
-    test()
+     
   return (
-    <div>
-        Landing Page      
-    </div>
+     
+        <Report/>
+   
   )
 }
 
