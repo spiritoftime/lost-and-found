@@ -112,7 +112,7 @@ const Login = () => {
           <div className="mx-auto flex gap-2">
             <p>New User?</p>
             <a
-              href="login"
+              href="register"
               className="cursor-pointer text-rose-500 decoration rose-500 underline underline-offset-4 font-medium"
             >
               Sign Up Now!
