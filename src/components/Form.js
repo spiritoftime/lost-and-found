@@ -3,15 +3,15 @@ import FormRow from './FormRow'
 import FormRowSelect from './FormRowSelect'
 import TextArea from './TextArea'
  
-const Form = () => {
+const Form = ({reportType}) => {
 
   // stores states for forms 
-  const initialState = {
-    reportType:"",   
+  const initialState = {  
     petName: '',
     respondsTo:"",
     gender: '',
     species: '',
+    lastSeen:"",
     contactNumber: "",
     microChipNumber:"",
     description:"",
@@ -31,35 +31,51 @@ const Form = () => {
     <>
       <div>
          
-          <div className="mt-5 md:col-span-2 md:mt-0">
+          <div className="mt-5 md:col-span-2 md:mt-0 h-full w-full">
             <form action="#" method="POST">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6"> 
                       
                     {/*Name*/}
-                      <label htmlFor="petName" className="block text-sm font-medium leading-6 text-gray-900">
+                    {reportType==="missing" &&  
+                    <div className="space-y-6"> <label htmlFor="petName" className="block text-sm font-medium leading-6 text-gray-900">
                         Pet's Name
                       </label>
                       <FormRow name="petName" type="text" placeholder="Pet's name" handleChange={handleChange}/>
+                    </div>                     
+                    }
+                     
 
                     {/*Responds to*/}
-                      <label htmlFor="respondsTo" className="block text-sm font-medium leading-6 text-gray-900">
+                    {reportType==="missing" &&  
+                    <div className="space-y-6" > <label htmlFor="respondsTo" className="block text-sm font-medium leading-6 text-gray-900">
                         Responds to
                       </label>
+                      <div className='h-100'> <p> </p></div>
+                        
                       <FormRow name="respondsTo" type="text" placeholder="Responds to" handleChange={handleChange}/>
+                      </div>                     
+                    }
 
-
-                      {/*Gender*/}
-                      <label htmlFor="gender" className="block text-sm font-medium leading-6 text-gray-900">
-                        Gender
-                      </label>
-                      <FormRowSelect name="gender"  value={values.gender} options={["male","female"]} handleChange={handleChange}/>
 
                       {/*Species*/}
                       <label htmlFor="species" className="block text-sm font-medium leading-6 text-gray-900">
                         Species
                       </label>
                       <FormRowSelect name="species" value={values.species} options={["dog","cat","bird","rabbit","hamster","others"]} handleChange={handleChange}/>
+                      
+                      {/*Gender*/}
+                      <label htmlFor="gender" className="block text-sm font-medium leading-6 text-gray-900">
+                        Gender
+                      </label>
+                      <FormRowSelect name="gender"  value={values.gender} options={["male","female"]} handleChange={handleChange}/>
+                      
+                      {/*Last Seen*/}
+                      <label htmlFor="lastSeen" className="block text-sm font-medium leading-6 text-gray-900">
+                        Last seen
+                      </label>
+                      <FormRow name="lastSeen" type="text" placeholder="postal code" handleChange={handleChange}/>
+                     
                       
                       {/*Contact Number  CHECK WITH SAMUEL HOW TO LIMIT NUMBER OF CHARACTERS*/}
                       <label htmlFor="contactNumber" className="block text-sm font-medium leading-6 text-gray-900">
