@@ -27,6 +27,8 @@ const Profile = () => {
         "image/jpeg": [".jpeg", ".jpg"],
         "image/avif": [".avif"],
       },
+      noClick: true,
+      noKeyboard: true,
     });
 
   return (
@@ -74,7 +76,7 @@ const Profile = () => {
                   htmlFor="file-upload"
                   className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
-                  <span>Upload a file</span>
+                  <span>Upload an image file</span>
                   <input
                     {...getInputProps()}
                     id="file-upload"
@@ -85,7 +87,9 @@ const Profile = () => {
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
-              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-xs text-gray-500">
+                PNG, JPG, AVIF or WEBP up to 10MB
+              </p>
             </div>
           </div>
           {imageDetails.length !== 0 ? <p>{imageDetails.imgName}</p> : ""}
@@ -93,7 +97,7 @@ const Profile = () => {
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
           <img
-            className="rounded-full w-[150px] aspect-square"
+            className="rounded-full w-[300px] aspect-square"
             alt=""
             src={imageDetails.length === 0 ? profileUrl : imageDetails.preview}
           />
