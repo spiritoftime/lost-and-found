@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
+import { database,storage} from '../firebase'
+import { onChildAdded, push, ref, set } from 'firebase/database'
+import { uploadBytes, getDownloadURL, ref as sRef } from 'firebase/storage'
+ 
 import FormRow from './FormRow'
 import FormRowSelect from './FormRowSelect'
 import TextArea from './TextArea'
  
+const DB_REPORT_KEY = 'report'
 const Form = ({reportType}) => {
+ 
 
   // stores states for forms 
   const initialState = {  
+
+    reportType:reportType,
     petName: '',
     respondsTo:"",
     gender: '',
@@ -14,19 +22,62 @@ const Form = ({reportType}) => {
     lastSeen:"",
     contactNumber: "",
     microChipNumber:"",
-    description:"",
+    description:"",     
     imageURL:""
   } 
+  const [values, setValues] = useState(initialState)
+  // stores image file uploaded by user 
+  const [fileUpload,setFileUpload] = useState("")
+
 
   // handle form changes 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value })
   }
+  // handle user image input 
+  //stores file in fileUpload state 
+  const handleFileChange =(e)=>{     
+    setFileUpload(e.target.files[0])     
+  }  
+
+  //handle Submit 
+  const handleSubmit = (e) => {
+  e.preventDefault()
+
+  // generate a name for the image 
+  const generateImageName = (str) => {
+    const strSplit = str.split('.')
+    return strSplit[0]
+  }
+
+  // upload the file in fileUploadstate to firebase Storage    
+  const fileName = generateImageName(fileUpload.name)
+  console.log(fileName)
+
+  const storageRef = sRef(storage, `images/${fileName}`)
+  
+  // once uploaded , generate the download URL , then post the report t
+  uploadBytes(storageRef, values.fileUpload)
+      .then((snapshot) => {
+       return( getDownloadURL(snapshot.ref))
+      })
+      .then((url) => {
+        console.log(url)
+        
+        const reportListRef = ref(database, DB_REPORT_KEY)
+        const newReportRef = push(reportListRef)
+
+        // sets the imageURL not by setting state, but by creating a shallow copy of the initial state and inputing the imageURL
+        // doing this because if i try to setState for imageURL then post the report, it will post even before the imageURL has been updated
+        // is there a better way to do this with async await? 
+        const report = {...values,imageURL:url}
+        set( newReportRef, report)
+      })
+  }
  
-  const [values, setValues] = useState(initialState)
-
-
-
+ 
+ 
+    
   return (
     <>
       <div>
@@ -120,11 +171,11 @@ const Form = ({reportType}) => {
                         </svg>
                         <div className="flex text-sm text-gray-600">
                           <label
-                            htmlFor="file-upload"
+                            htmlFor="fileUpload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                           >
                             <span>Upload a file</span>
-                            <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                            <input id="fileUpload" name="fileUpload" type="file" className="sr-only" onChange={handleFileChange} />
                           </label>
                           <p className="pl-1">or drag and drop</p>
                         </div>
@@ -137,6 +188,7 @@ const Form = ({reportType}) => {
                   <button
                     type="submit"
                     className="inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                    onClick={handleSubmit}
                   >
                     Submit
                   </button>

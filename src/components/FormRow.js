@@ -2,7 +2,7 @@ import React from 'react'
 
 const FormRow = ({type,name,placeholder,handleChange}) => {
   {/*check with sam why it double console logs */}
-  console.log(name)
+ 
   return (
     <input
     type={type}

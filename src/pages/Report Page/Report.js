@@ -1,21 +1,23 @@
 import React, { useState } from 'react'
 import Form from '../../components/Form'
 import { useAppContext } from '../../context/appContext'
+import { database } from '../../firebase';
 import lostPet from "../../images/lost-cat.png";
 import spottedPet from "../../images/spotted-cat.png";
+ 
+
 
  
 const Report = () => {
   
   const [reportType,setReportType]= useState("")
 
-
   
      
   return (
     <>
 
-    <div className="w-screen h-screen bg-slate-400 flex justify-center">      
+    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">      
 
      
        
