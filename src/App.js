@@ -9,7 +9,8 @@ import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import Register from "./pages/Register Page/Register";
 import Login from "./pages/Register Page/Login";
 import Report from "./pages/Report Page/Report";
- 
+import Profile from "./pages/profile_page/Profile";
+
 function App() {
   return (
     <BrowserRouter>
@@ -17,7 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/report" element={<Report />} />
-
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );
