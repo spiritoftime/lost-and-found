@@ -5,18 +5,46 @@ import FormRow from "../../components/FormRow";
 import SquareFormInput from "../../components/SquareFormInput";
 import { useAppContext } from "../../context/appContext";
 import { useDropzone } from "react-dropzone";
-
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { YupProfileSchema } from "./YupProfileSchema";
+import emptyAvatar from "../../images/empty-avatar.png";
+import RoundButton from "../../components/RoundButton";
+import { getDatabase, ref, set } from "firebase/database";
+import {
+  getStorage,
+  ref as sRef,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
 const Profile = () => {
-  const [imageDetails, setImageDetails] = useState({});
+  const db = getDatabase();
+  const storage = getStorage();
+  const { authDetails, setAuthDetails } = useAppContext();
+  console.log(authDetails);
+  const [imageDetails, setImageDetails] = useState({
+    preview: authDetails.profileUrl,
+  });
+
   const {
-    authDetails: { profileUrl, name },
-  } = useAppContext();
-  const onDrop = useCallback((acceptedFiles) =>
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(YupProfileSchema),
+    defaultValues: {
+      username: authDetails.username,
+      contactNumber: authDetails.contactNumber,
+      profileUrl: authDetails.profileUrl,
+    },
+  });
+
+  const onDrop = useCallback((acceptedFiles) => {
     setImageDetails({
       imgName: acceptedFiles[0].name,
       preview: URL.createObjectURL(acceptedFiles[0]),
-    })
-  );
+    });
+  }, []);
   const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
     useDropzone({
       onDrop,
@@ -27,33 +55,83 @@ const Profile = () => {
         "image/jpeg": [".jpeg", ".jpg"],
         "image/avif": [".avif"],
       },
-      noClick: true,
       noKeyboard: true,
     });
+  const changeUserDetails = (e) => {
+    if (e.profileUrl.length === 0) {
+      set(ref(db, "users/" + authDetails.uid), {
+        ...authDetails,
+        username: e.username,
+        contactNumber: e.contactNumber,
+        // problem - this will overwrite all the posts and other details
+      });
+
+      setAuthDetails((prevAuth) => {
+        return { ...prevAuth, name: e.name, contactNumber: e.contactNumber };
+      });
+    } else {
+      const imageStorageRef = sRef(storage, imageDetails.imgName.split(".")[0]);
+      uploadBytes(imageStorageRef, e.profileUrl).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          set(ref(db, "users/" + authDetails.uid), {
+            ...authDetails,
+            username: e.username,
+            contactNumber: e.contactNumber,
+            profileUrl: url,
+          });
+        });
+      });
+
+      setAuthDetails((prevAuth) => {
+        return {
+          ...prevAuth,
+          username: e.name,
+          contactNumber: e.contactNumber,
+          profileUrl: e.profileUrl,
+        };
+      });
+    }
+  };
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+      <ul>
+        {errors.map((e) => (
+          <li key={e.code}>{e.message}</li>
+        ))}
+      </ul>
+    </li>
+  ));
 
   return (
-    <div className="p-8 flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(changeUserDetails)}
+      className="p-8 flex flex-col gap-4"
+    >
       <h2 className="text-2xl font-medium">Edit Credentials</h2>
       <div className="flex flex-col gap-2">
         <FormLabel htmlFor="username" label="Username" />
-        <input
-          className=" w-full border-black border-2"
+        <SquareFormInput
           type="text"
           id="username"
+          register={register}
+          errors={errors}
         />
       </div>
       <div className="flex flex-col gap-2">
         <FormLabel htmlFor="contact" label="Contact Number" />
-        <input
-          className=" w-full border-black border-2"
+        <SquareFormInput
+          register={register}
+          errors={errors}
           type="number"
-          id="contact"
+          id="contactNumber"
         />
       </div>
       <div className="flex  gap-2">
         <div className="w-full">
+          <FormLabel label="Profile Picture" htmlFor="profile" />
           <div
-            {...getRootProps()}
+            {...getRootProps({ className: "dropzone" })}
             className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
           >
             <div className="space-y-1 text-center">
@@ -72,19 +150,20 @@ const Profile = () => {
                 />
               </svg>
               <div className="flex text-sm text-gray-600">
-                <label
-                  htmlFor="file-upload"
+                <div
+                  htmlFor="profileUrl"
                   className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
                   <span>Upload an image file</span>
-                  <input
-                    {...getInputProps()}
-                    id="file-upload"
+                  <SquareFormInput
+                    getInputProps={getInputProps}
+                    register={register}
+                    errors={errors}
+                    id="profileUrl"
                     name="file-upload"
                     type="file"
-                    className="sr-only"
                   />
-                </label>
+                </div>
                 <p className="pl-1">or drag and drop</p>
               </div>
               <p className="text-xs text-gray-500">
@@ -92,18 +171,27 @@ const Profile = () => {
               </p>
             </div>
           </div>
-          {imageDetails.length !== 0 ? <p>{imageDetails.imgName}</p> : ""}
+          {imageDetails.imgName ? <p>{imageDetails.imgName}</p> : ""}
+          {fileRejectionItems}
         </div>
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
           <img
-            className="rounded-full w-[300px] aspect-square"
+            className="object-cover rounded-full w-[200px] aspect-square"
             alt=""
-            src={imageDetails.length === 0 ? profileUrl : imageDetails.preview}
+            src={
+              imageDetails.preview === undefined
+                ? emptyAvatar
+                : imageDetails.preview
+            }
+            referrerPolicy="no-referrer"
           />
         </div>
       </div>
-    </div>
+      <RoundButton type="submit" bgColorClass="max-w-2xl bg-indigo-600">
+        Save Changes
+      </RoundButton>
+    </form>
   );
 };
 

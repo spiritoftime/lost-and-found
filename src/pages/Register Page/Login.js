@@ -8,7 +8,7 @@ import OrDivider from "./OrDivider";
 import { useForm } from "react-hook-form";
 import { YupAuthSchema } from "./YupAuthSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { getDatabase, ref, child, get, set } from "firebase/database";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -25,7 +25,9 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(YupAuthSchema) });
   const navigate = useNavigate();
-  const dbRef = ref(getDatabase());
+  const db = getDatabase();
+
+  const dbRef = ref(db);
   const { setAuthDetails } = useAppContext();
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
@@ -33,12 +35,27 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        setAuthDetails({
-          userUID: user.uid,
-          profileUrl: user.photoURL,
-          name: user.displayName,
-        });
-        navigate("/profile");
+        get(child(dbRef, `users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setAuthDetails({ ...snapshot.val(), uid: user.uid });
+              navigate("/profile");
+            } else {
+              set(ref(db, "users/" + user.uid), {
+                username: user.displayName,
+                profileUrl: user.photoURL,
+              });
+              setAuthDetails({
+                profileUrl: user.photoURL,
+                username: user.displayName,
+                uid: user.uid,
+              });
+              navigate("/profile");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         console.log("failed to login", error);
@@ -53,13 +70,13 @@ const Login = () => {
         get(child(dbRef, `users/${user.uid}`))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              setAuthDetails(snapshot.val());
+              setAuthDetails({ ...snapshot.val(), uid: user.uid });
             } else {
               console.log("No data available");
             }
           })
           .catch((error) => {
-            console.error(error);
+            console.log(error);
           });
       })
       .catch((error) => {

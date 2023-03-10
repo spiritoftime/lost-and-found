@@ -35,9 +35,9 @@ const Register = () => {
       .then((result) => {
         const user = result.user;
         setAuthDetails({
-          userUID: user.uid,
+          uid: user.uid,
           profileUrl: user.photoURL,
-          name: user.displayName,
+          username: user.displayName,
         });
         set(ref(db, "users/" + user.uid), {
           username: user.displayName,
@@ -56,7 +56,7 @@ const Register = () => {
         // Signed in
         const user = userCredential.user;
         setAuthDetails({
-          userUID: user.uid,
+          uid: user.uid,
           username: user.email,
         });
         set(ref(db, "users/" + user.uid), {
