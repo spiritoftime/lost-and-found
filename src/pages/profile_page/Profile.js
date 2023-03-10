@@ -11,10 +11,17 @@ import { YupProfileSchema } from "./YupProfileSchema";
 import emptyAvatar from "../../images/empty-avatar.png";
 import RoundButton from "../../components/RoundButton";
 import { getDatabase, ref, set } from "firebase/database";
-
+import {
+  getStorage,
+  ref as sRef,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
 const Profile = () => {
   const db = getDatabase();
+  const storage = getStorage();
   const { authDetails, setAuthDetails } = useAppContext();
+  console.log(authDetails);
   const [imageDetails, setImageDetails] = useState({
     preview: authDetails.profileUrl,
   });
@@ -32,14 +39,12 @@ const Profile = () => {
     },
   });
 
-  const onDrop = useCallback(
-    (acceptedFiles) =>
-      setImageDetails({
-        imgName: acceptedFiles[0].name,
-        preview: URL.createObjectURL(acceptedFiles[0]),
-      }),
-    []
-  );
+  const onDrop = useCallback((acceptedFiles) => {
+    setImageDetails({
+      imgName: acceptedFiles[0].name,
+      preview: URL.createObjectURL(acceptedFiles[0]),
+    });
+  }, []);
   const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
     useDropzone({
       onDrop,
@@ -50,7 +55,6 @@ const Profile = () => {
         "image/jpeg": [".jpeg", ".jpg"],
         "image/avif": [".avif"],
       },
-      noClick: true,
       noKeyboard: true,
     });
   const changeUserDetails = (e) => {
@@ -66,13 +70,18 @@ const Profile = () => {
         return { ...prevAuth, name: e.name, contactNumber: e.contactNumber };
       });
     } else {
-      // need to save the image into the storage db here
-      set(ref(db, "users/" + authDetails.uid), {
-        ...authDetails,
-        username: e.username,
-        contactNumber: e.contactNumber,
-        profileUrl: e.profileUrl,
+      const imageStorageRef = sRef(storage, imageDetails.imgName.split(".")[0]);
+      uploadBytes(imageStorageRef, e.profileUrl).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          set(ref(db, "users/" + authDetails.uid), {
+            ...authDetails,
+            username: e.username,
+            contactNumber: e.contactNumber,
+            profileUrl: url,
+          });
+        });
       });
+
       setAuthDetails((prevAuth) => {
         return {
           ...prevAuth,
@@ -122,7 +131,7 @@ const Profile = () => {
         <div className="w-full">
           <FormLabel label="Profile Picture" htmlFor="profile" />
           <div
-            {...getRootProps()}
+            {...getRootProps({ className: "dropzone" })}
             className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
           >
             <div className="space-y-1 text-center">
@@ -141,7 +150,7 @@ const Profile = () => {
                 />
               </svg>
               <div className="flex text-sm text-gray-600">
-                <label
+                <div
                   htmlFor="profileUrl"
                   className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
@@ -154,7 +163,7 @@ const Profile = () => {
                     name="file-upload"
                     type="file"
                   />
-                </label>
+                </div>
                 <p className="pl-1">or drag and drop</p>
               </div>
               <p className="text-xs text-gray-500">
@@ -175,7 +184,7 @@ const Profile = () => {
                 ? emptyAvatar
                 : imageDetails.preview
             }
-            referrerpolicy="no-referrer"
+            referrerPolicy="no-referrer"
           />
         </div>
       </div>

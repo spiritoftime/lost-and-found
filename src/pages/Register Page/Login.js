@@ -38,16 +38,17 @@ const Login = () => {
         get(child(dbRef, `users/${user.uid}`))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              setAuthDetails(snapshot.val());
+              setAuthDetails({ ...snapshot.val(), uid: user.uid });
+              navigate("/profile");
             } else {
               set(ref(db, "users/" + user.uid), {
                 username: user.displayName,
                 profileUrl: user.photoURL,
               });
               setAuthDetails({
-                userUID: user.uid,
                 profileUrl: user.photoURL,
                 username: user.displayName,
+                uid: user.uid,
               });
               navigate("/profile");
             }
@@ -55,7 +56,6 @@ const Login = () => {
           .catch((error) => {
             console.error(error);
           });
-        navigate("/profile");
       })
       .catch((error) => {
         console.log("failed to login", error);
@@ -70,7 +70,7 @@ const Login = () => {
         get(child(dbRef, `users/${user.uid}`))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              setAuthDetails(snapshot.val());
+              setAuthDetails({ ...snapshot.val(), uid: user.uid });
             } else {
               console.log("No data available");
             }
