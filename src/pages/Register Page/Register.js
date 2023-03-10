@@ -17,7 +17,10 @@ import {
 } from "firebase/auth";
 import { useAppContext } from "../../context/appContext";
 import { getDatabase, ref, set } from "firebase/database";
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -40,6 +43,7 @@ const Register = () => {
           username: user.displayName,
           profileUrl: user.photoURL,
         });
+        navigate("/profile");
       })
       .catch((error) => {
         console.log("failed to login", error);
@@ -57,7 +61,6 @@ const Register = () => {
         });
         set(ref(db, "users/" + user.uid), {
           username: user.email,
-          profileUrl: user.photoURL,
         });
       })
       .catch((error) => {
@@ -106,8 +109,8 @@ const Register = () => {
                 type="password"
               />
             </div>
-            <RoundButton type="submit" bgColorClass="bg-[#FCC419]">
-              Login
+            <RoundButton type="submit" bgColorClass="bg-indigo-600">
+              Sign Up
             </RoundButton>
           </form>
           <div className="mx-auto flex gap-2">

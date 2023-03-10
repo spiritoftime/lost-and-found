@@ -1,6 +1,11 @@
 import React from "react";
 import { ErrorMessage } from "@hookform/error-message";
-const SquareFormInput = ({ type, id, register, errors }) => {
+const SquareFormInput = ({
+  type,
+  id,
+  register = undefined,
+  errors = undefined,
+}) => {
   return (
     <>
       <input

@@ -16,6 +16,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useAppContext } from "../../context/appContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -23,6 +24,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(YupAuthSchema) });
+  const navigate = useNavigate();
   const dbRef = ref(getDatabase());
   const { setAuthDetails } = useAppContext();
   const provider = new GoogleAuthProvider();
@@ -36,6 +38,7 @@ const Login = () => {
           profileUrl: user.photoURL,
           name: user.displayName,
         });
+        navigate("/profile");
       })
       .catch((error) => {
         console.log("failed to login", error);
@@ -105,7 +108,7 @@ const Login = () => {
                 type="password"
               />
             </div>
-            <RoundButton type="submit" bgColorClass="bg-[#FCC419]">
+            <RoundButton type="submit" bgColorClass="bg-indigo-600">
               Login
             </RoundButton>
           </form>
