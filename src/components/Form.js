@@ -18,7 +18,7 @@ const Form = ({reportType}) => {
     petName: '',
     respondsTo:"",
     gender: '',
-    species: '',
+    category: '',
     lastSeen:"",
     contactNumber: "",
     microChipNumber:"",
@@ -34,6 +34,8 @@ const Form = ({reportType}) => {
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value })
   }
+
+  
   // handle user image input 
   //stores file in fileUpload state 
   const handleFileChange =(e)=>{     
@@ -110,10 +112,10 @@ const Form = ({reportType}) => {
 
 
                       {/*Species*/}
-                      <label htmlFor="species" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                         Species
                       </label>
-                      <FormRowSelect name="species" value={values.species} options={["dog","cat","bird","rabbit","hamster","others"]} handleChange={handleChange}/>
+                      <FormRowSelect name="category" value={values.category} options={["dog","cat","bird","rabbit","hamster","others"]} handleChange={handleChange}/>
                       
                       {/*Gender*/}
                       <label htmlFor="gender" className="block text-sm font-medium leading-6 text-gray-900">
