@@ -5,17 +5,37 @@ import FormRow from "../../components/FormRow";
 import SquareFormInput from "../../components/SquareFormInput";
 import { useAppContext } from "../../context/appContext";
 import { useDropzone } from "react-dropzone";
-
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { YupProfileSchema } from "./YupProfileSchema";
+import emptyAvatar from "../../images/empty-avatar.png";
+import RoundButton from "../../components/RoundButton";
 const Profile = () => {
-  const [imageDetails, setImageDetails] = useState({});
   const {
-    authDetails: { profileUrl, name },
+    authDetails: { profileUrl, name, contactNumber },
   } = useAppContext();
-  const onDrop = useCallback((acceptedFiles) =>
-    setImageDetails({
-      imgName: acceptedFiles[0].name,
-      preview: URL.createObjectURL(acceptedFiles[0]),
-    })
+  const [imageDetails, setImageDetails] = useState({ preview: profileUrl });
+  console.log(imageDetails.length === 0);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(YupProfileSchema),
+    defaultValues: {
+      username: name,
+      contactNumber: contactNumber,
+      profileUrl: profileUrl,
+    },
+  });
+
+  const onDrop = useCallback(
+    (acceptedFiles) =>
+      setImageDetails({
+        imgName: acceptedFiles[0].name,
+        preview: URL.createObjectURL(acceptedFiles[0]),
+      }),
+    []
   );
   const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
     useDropzone({
@@ -30,28 +50,41 @@ const Profile = () => {
       noClick: true,
       noKeyboard: true,
     });
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+      <ul>
+        {errors.map((e) => (
+          <li key={e.code}>{e.message}</li>
+        ))}
+      </ul>
+    </li>
+  ));
 
   return (
-    <div className="p-8 flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl font-medium">Edit Credentials</h2>
       <div className="flex flex-col gap-2">
         <FormLabel htmlFor="username" label="Username" />
-        <input
-          className=" w-full border-black border-2"
+        <SquareFormInput
           type="text"
           id="username"
+          register={register}
+          errors={errors}
         />
       </div>
       <div className="flex flex-col gap-2">
         <FormLabel htmlFor="contact" label="Contact Number" />
-        <input
-          className=" w-full border-black border-2"
+        <SquareFormInput
+          register={register}
+          errors={errors}
           type="number"
           id="contact"
         />
       </div>
       <div className="flex  gap-2">
         <div className="w-full">
+          <FormLabel label="Profile Picture" htmlFor="profile" />
           <div
             {...getRootProps()}
             className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
@@ -77,12 +110,13 @@ const Profile = () => {
                   className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
                   <span>Upload an image file</span>
-                  <input
-                    {...getInputProps()}
+                  <SquareFormInput
+                    getInputProps={getInputProps}
+                    register={register}
+                    errors={errors}
                     id="file-upload"
                     name="file-upload"
                     type="file"
-                    className="sr-only"
                   />
                 </label>
                 <p className="pl-1">or drag and drop</p>
@@ -93,17 +127,27 @@ const Profile = () => {
             </div>
           </div>
           {imageDetails.length !== 0 ? <p>{imageDetails.imgName}</p> : ""}
+          {fileRejectionItems}
         </div>
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
           <img
-            className="rounded-full w-[300px] aspect-square"
+            className="rounded-full w-[200px] aspect-square"
             alt=""
-            src={imageDetails.length === 0 ? profileUrl : imageDetails.preview}
+            src={
+              imageDetails.preview === undefined
+                ? emptyAvatar
+                : imageDetails.preview === profileUrl
+                ? profileUrl
+                : imageDetails.preview
+            }
           />
         </div>
       </div>
-    </div>
+      <RoundButton type="submit" bgColorClass="max-w-2xl bg-indigo-600">
+        Save Changes
+      </RoundButton>
+    </form>
   );
 };
 
