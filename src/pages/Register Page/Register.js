@@ -37,7 +37,7 @@ const Register = () => {
         setAuthDetails({
           userUID: user.uid,
           profileUrl: user.photoURL,
-          name: user.displayName,
+          username: user.displayName,
         });
         set(ref(db, "users/" + user.uid), {
           username: user.displayName,

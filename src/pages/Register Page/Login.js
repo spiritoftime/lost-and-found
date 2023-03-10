@@ -8,7 +8,7 @@ import OrDivider from "./OrDivider";
 import { useForm } from "react-hook-form";
 import { YupAuthSchema } from "./YupAuthSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { getDatabase, ref, child, get, set } from "firebase/database";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -25,7 +25,9 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(YupAuthSchema) });
   const navigate = useNavigate();
-  const dbRef = ref(getDatabase());
+  const db = getDatabase();
+
+  const dbRef = ref(db);
   const { setAuthDetails } = useAppContext();
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
@@ -33,11 +35,26 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        setAuthDetails({
-          userUID: user.uid,
-          profileUrl: user.photoURL,
-          name: user.displayName,
-        });
+        get(child(dbRef, `users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setAuthDetails(snapshot.val());
+            } else {
+              set(ref(db, "users/" + user.uid), {
+                username: user.displayName,
+                profileUrl: user.photoURL,
+              });
+              setAuthDetails({
+                userUID: user.uid,
+                profileUrl: user.photoURL,
+                username: user.displayName,
+              });
+              navigate("/profile");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
         navigate("/profile");
       })
       .catch((error) => {
@@ -59,7 +76,7 @@ const Login = () => {
             }
           })
           .catch((error) => {
-            console.error(error);
+            console.log(error);
           });
       })
       .catch((error) => {

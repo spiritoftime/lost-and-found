@@ -10,12 +10,15 @@ import { useForm } from "react-hook-form";
 import { YupProfileSchema } from "./YupProfileSchema";
 import emptyAvatar from "../../images/empty-avatar.png";
 import RoundButton from "../../components/RoundButton";
+import { getDatabase, ref, set } from "firebase/database";
+
 const Profile = () => {
-  const {
-    authDetails: { profileUrl, name, contactNumber },
-  } = useAppContext();
-  const [imageDetails, setImageDetails] = useState({ preview: profileUrl });
-  console.log(imageDetails.length === 0);
+  const db = getDatabase();
+  const { authDetails, setAuthDetails } = useAppContext();
+  const [imageDetails, setImageDetails] = useState({
+    preview: authDetails.profileUrl,
+  });
+
   const {
     register,
     handleSubmit,
@@ -23,9 +26,9 @@ const Profile = () => {
   } = useForm({
     resolver: yupResolver(YupProfileSchema),
     defaultValues: {
-      username: name,
-      contactNumber: contactNumber,
-      profileUrl: profileUrl,
+      username: authDetails.username,
+      contactNumber: authDetails.contactNumber,
+      profileUrl: authDetails.profileUrl,
     },
   });
 
@@ -50,6 +53,36 @@ const Profile = () => {
       noClick: true,
       noKeyboard: true,
     });
+  const changeUserDetails = (e) => {
+    if (e.profileUrl.length === 0) {
+      set(ref(db, "users/" + authDetails.uid), {
+        ...authDetails,
+        username: e.username,
+        contactNumber: e.contactNumber,
+        // problem - this will overwrite all the posts and other details
+      });
+
+      setAuthDetails((prevAuth) => {
+        return { ...prevAuth, name: e.name, contactNumber: e.contactNumber };
+      });
+    } else {
+      // need to save the image into the storage db here
+      set(ref(db, "users/" + authDetails.uid), {
+        ...authDetails,
+        username: e.username,
+        contactNumber: e.contactNumber,
+        profileUrl: e.profileUrl,
+      });
+      setAuthDetails((prevAuth) => {
+        return {
+          ...prevAuth,
+          username: e.name,
+          contactNumber: e.contactNumber,
+          profileUrl: e.profileUrl,
+        };
+      });
+    }
+  };
   const fileRejectionItems = fileRejections.map(({ file, errors }) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
@@ -62,7 +95,10 @@ const Profile = () => {
   ));
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(changeUserDetails)}
+      className="p-8 flex flex-col gap-4"
+    >
       <h2 className="text-2xl font-medium">Edit Credentials</h2>
       <div className="flex flex-col gap-2">
         <FormLabel htmlFor="username" label="Username" />
@@ -79,7 +115,7 @@ const Profile = () => {
           register={register}
           errors={errors}
           type="number"
-          id="contact"
+          id="contactNumber"
         />
       </div>
       <div className="flex  gap-2">
@@ -106,7 +142,7 @@ const Profile = () => {
               </svg>
               <div className="flex text-sm text-gray-600">
                 <label
-                  htmlFor="file-upload"
+                  htmlFor="profileUrl"
                   className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
                   <span>Upload an image file</span>
@@ -114,7 +150,7 @@ const Profile = () => {
                     getInputProps={getInputProps}
                     register={register}
                     errors={errors}
-                    id="file-upload"
+                    id="profileUrl"
                     name="file-upload"
                     type="file"
                   />
@@ -126,21 +162,20 @@ const Profile = () => {
               </p>
             </div>
           </div>
-          {imageDetails.length !== 0 ? <p>{imageDetails.imgName}</p> : ""}
+          {imageDetails.imgName ? <p>{imageDetails.imgName}</p> : ""}
           {fileRejectionItems}
         </div>
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
           <img
-            className="rounded-full w-[200px] aspect-square"
+            className="object-cover rounded-full w-[200px] aspect-square"
             alt=""
             src={
               imageDetails.preview === undefined
                 ? emptyAvatar
-                : imageDetails.preview === profileUrl
-                ? profileUrl
                 : imageDetails.preview
             }
+            referrerpolicy="no-referrer"
           />
         </div>
       </div>
