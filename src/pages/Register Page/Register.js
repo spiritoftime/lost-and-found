@@ -18,8 +18,12 @@ import {
 import { useAppContext } from "../../context/appContext";
 import { getDatabase, ref, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-
+ 
+ 
 const Register = () => {
+
+ 
+
   const navigate = useNavigate();
   const {
     register,
@@ -37,13 +41,14 @@ const Register = () => {
         setAuthDetails({
           uid: user.uid,
           profileUrl: user.photoURL,
-          username: user.displayName,
+          username: user.displayName,          
         });
         set(ref(db, "users/" + user.uid), {
           username: user.displayName,
           profileUrl: user.photoURL,
         });
-        navigate("/profile");
+        
+        navigate("/feed");
       })
       .catch((error) => {
         console.log("failed to login", error);
@@ -57,11 +62,15 @@ const Register = () => {
         const user = userCredential.user;
         setAuthDetails({
           uid: user.uid,
-          username: user.email,
+          username: user.email,        
         });
         set(ref(db, "users/" + user.uid), {
           username: user.email,
         });
+        navigate("/feed");
+         
+         
+         
       })
       .catch((error) => {
         const errorCode = error.code;

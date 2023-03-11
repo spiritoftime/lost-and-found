@@ -13,6 +13,9 @@ const {values,setValues} =useAppContext()
     setValues({...values,filteredReports:[...values.allReports]})
  },[values.allReports])
 
+ const soloCheckBox =(list)=>{
+
+ }
  
   
  const handleChange = (e) => {

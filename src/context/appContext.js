@@ -8,14 +8,7 @@ const AppContext = React.createContext();
 
 
 
-// State values  
-const initialState = {  
-  allReports:[],
-  filteredReports:[],
-  reportType:"all",
-  gender:"all",
-  category:"all",
-} 
+
 
 
 
@@ -23,7 +16,18 @@ const initialState = {
  
 // Create Provider
 const AppProvider = ({ children }) => {
+  // State values  
+  const initialState = {  
+   
+  allReports:[],
+  filteredReports:[],
+  reportType:"all",
+  gender:"all",
+  category:"all",
+  }     
   const [values, setValues] = useState(initialState)
+  const [authDetails, setAuthDetails] = useState({});
+
 
   //handleChange
   
@@ -33,7 +37,7 @@ const AppProvider = ({ children }) => {
  
 
  
-  const [authDetails, setAuthDetails] = useState({});
+  
   return (
     <AppContext.Provider value={{ authDetails, setAuthDetails,values ,setValues}}>
       {children}

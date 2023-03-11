@@ -39,7 +39,7 @@ const Login = () => {
           .then((snapshot) => {
             if (snapshot.exists()) {
               setAuthDetails({ ...snapshot.val(), uid: user.uid });
-              navigate("/profile");
+              navigate("/feed");
             } else {
               set(ref(db, "users/" + user.uid), {
                 username: user.displayName,
@@ -50,7 +50,7 @@ const Login = () => {
                 username: user.displayName,
                 uid: user.uid,
               });
-              navigate("/profile");
+              navigate("/feed");
             }
           })
           .catch((error) => {
@@ -78,6 +78,7 @@ const Login = () => {
           .catch((error) => {
             console.log(error);
           });
+          navigate("/feed");
       })
       .catch((error) => {
         const errorCode = error.code;

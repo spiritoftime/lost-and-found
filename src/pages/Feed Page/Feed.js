@@ -33,7 +33,7 @@ const Feed = () => {
 // console.log(values.allReports)
   
   return (<>
-    <NavBar/>
+     
     <div className="grid grid-cols-5 ">
     {/*- Filter Nav*/ }
     <div className='  col-span-1   p-5 border-black'>
@@ -51,9 +51,9 @@ const Feed = () => {
     <div className="grid grid-cols-4 gap-5">
     {values.filteredReports && values.filteredReports.map((report,index)=>{
     return <  div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    
+    <div  className="p-2" >Reported by: {report.username}</div>
     <a href="#">
-        <img className="rounded-t-lg" src={petImage} alt="" />
+        <img  src={petImage} alt="" />
     </a>
     <div className={`p-2 tracking-wide text-center uppercase text-lg font-bold ${report.reportType==="missing" ? 'bg-red-100 text-red-400' : 'bg-green-100 text-green-600'} `}>{report.reportType}</div>
     <div className="p-5">

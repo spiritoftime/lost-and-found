@@ -6,14 +6,18 @@ import { uploadBytes, getDownloadURL, ref as sRef } from 'firebase/storage'
 import FormRow from './FormRow'
 import FormRowSelect from './FormRowSelect'
 import TextArea from './TextArea'
+import { useAppContext } from '../context/appContext'
  
 const DB_REPORT_KEY = 'report'
 const Form = ({reportType}) => {
+
+  const{authDetails}=useAppContext()
  
 
   // stores states for forms 
   const initialState = {  
-
+    uid:"",
+    username:"",
     reportType:reportType,
     petName: '',
     respondsTo:"",
@@ -72,7 +76,8 @@ const Form = ({reportType}) => {
         // sets the imageURL not by setting state, but by creating a shallow copy of the initial state and inputing the imageURL
         // doing this because if i try to setState for imageURL then post the report, it will post even before the imageURL has been updated
         // is there a better way to do this with async await? 
-        const report = {...values,imageURL:url}
+        const report = {...values,imageURL:url,uid:authDetails.uid,
+        username:authDetails.username}
         set( newReportRef, report)
       })
   }
