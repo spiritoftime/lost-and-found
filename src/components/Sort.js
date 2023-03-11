@@ -85,12 +85,13 @@ const {values,setValues} =useAppContext()
        <PurpleButton label={"Reset"} handleSubmit={handleReset}/>
     </div>
     <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-    {/*Status Filter Button */}
+    {/*Status Filter  */}
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Status</h5>
     <div className="grid grid-cols-2"> 
         <CheckBox name={"reportType"} value={"missing"} handleChange={handleChange}/>
         <CheckBox  name={"reportType"} value={"spotted"} handleChange={handleChange}/>        
     </div>
+    {/*Category Filter  */}
     <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>    
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Category</h5>
     <div className="grid grid-cols-3">
@@ -98,6 +99,7 @@ const {values,setValues} =useAppContext()
         return  <CheckBox key={index} value={c} name={"category"} handleChange={handleChange}/>
     })}
     </div>
+    {/*Gender Filter  */}
     <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>    
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gender</h5>
     <div className="grid grid-cols-3"> 
