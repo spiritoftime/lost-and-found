@@ -11,8 +11,8 @@ import spottedPet from "../../images/spotted-cat.png";
  
 const Report = () => {
   
-  const [reportType,setReportType]= useState("")
-
+  // const [reportType,setReportType]= useState("")
+  const {report,setReport} = useAppContext()
   
      
   return (
@@ -24,7 +24,7 @@ const Report = () => {
        
 
       {/*Display report options if !reportType*/}
-       {!reportType && 
+        
        
        <div className="flex flex-col justify-center content-center flex-wrap  w-5/6  " >
         {/*Title*/}
@@ -32,7 +32,7 @@ const Report = () => {
 
         <div className="flex flex-row gap-5 " >
         {/*Missing Card*/}
-        <Link to="/missing" className="block max-w-sm p-10 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        <Link to="/missing" onClick={()=>setReport({...report,reportType:"missing"})} className="block max-w-sm p-10 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
         >
          <img src={lostPet}  className="object-scale-down h-48 w-96 "></img>
          <h5 className="mb-2  mt-5 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Missing Report</h5>
@@ -40,7 +40,7 @@ const Report = () => {
 
 
         {/*Spotted Card*/}
-        <Link  to="/spotted" className="block max-w-sm p-10 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        <Link  to="/spotted" onClick={()=>setReport({...report,reportType:"spotted"})}className="block max-w-sm p-10 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
          >
         <img src={spottedPet} className="object-scale-down h-48 w-96 "></img>
          <h5 className="mb-2 mt-5 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Spotted Report</h5>
@@ -48,7 +48,7 @@ const Report = () => {
         </div>
        
 
-      </div>} 
+      </div>
 
         
     </div>      

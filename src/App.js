@@ -14,6 +14,7 @@ import Feed from "./pages/Feed Page/Feed";
 import NavBar from "./components/NavBar";
 import Missing from "./pages/Report Page/Missing";
 import Spotted from "./pages/Report Page/Spotted";
+import MyReport from "./pages/MyReport Page/MyReport";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
         <Route path="/feed" element={<Feed/>}/>
         <Route path="/missing" element={<Missing/>}/>
         <Route path="/spotted" element={<Spotted/>}/>
+        <Route path="/myReport" element={<MyReport/>}/>
 
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { database,storage} from '../firebase'
-import { onChildAdded, push, ref, set } from 'firebase/database'
+import { onChildAdded, push, ref, set,update } from 'firebase/database'
 import { uploadBytes, getDownloadURL, ref as sRef } from 'firebase/storage'
  
 import FormRow from './FormRow'
@@ -11,32 +11,32 @@ import { useAppContext } from '../context/appContext'
 const DB_REPORT_KEY = 'report'
 const Form = ({reportType}) => {
 
-  const{authDetails}=useAppContext()
+  const{authDetails,report,setReport}=useAppContext()
  
 
   // stores states for forms 
-  const initialState = {  
-    uid:"",
-    username:"",
-    reportType:reportType,
-    petName: '',
-    respondsTo:"",
-    gender: '',
-    category: '',
-    lastSeen:"",
-    contactNumber: "",
-    microChipNumber:"",
-    description:"",     
-    imageURL:""
-  } 
-  const [values, setValues] = useState(initialState)
+  // const initialState = {  
+  //   uid:"",
+  //   username:"",
+  //   reportType:reportType,
+  //   petName: "",
+  //   respondsTo:"",
+  //   gender: '',
+  //   category: '',
+  //   lastSeen:"",
+  //   contactNumber: "",
+  //   microChipNumber:"",
+  //   description:"",     
+  //   imageURL:""
+  // } 
+  // const [values, setValues] = useState(initialState)
   // stores image file uploaded by user 
   const [fileUpload,setFileUpload] = useState("")
 
 
   // handle form changes 
   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value })
+    setReport({ ...report, [e.target.name]: e.target.value })
   }
 
   
@@ -46,15 +46,34 @@ const Form = ({reportType}) => {
     setFileUpload(e.target.files[0])     
   }  
 
+  //handle Update
+
+  const updateReport= (data) => {
+    console.log(update)
+    
+
+    
+    set(ref(database, `report/${data.reportId}`),data)
+
+    console.log("update report success")
+  }
+
   //handle Submit 
   const handleSubmit = (e) => {
   e.preventDefault()
+
+  if(report.isEditing === true){
+    updateReport(report)
+  } else {
 
   // generate a name for the image 
   const generateImageName = (str) => {
     const strSplit = str.split('.')
     return strSplit[0]
   }
+  
+
+  
 
   // upload the file in fileUploadstate to firebase Storage    
   const fileName = generateImageName(fileUpload.name)
@@ -63,7 +82,7 @@ const Form = ({reportType}) => {
   const storageRef = sRef(storage, `images/${fileName}`)
   
   // once uploaded , generate the download URL , then post the report t
-  uploadBytes(storageRef, values.fileUpload)
+  uploadBytes(storageRef, report.fileUpload)
       .then((snapshot) => {
        return( getDownloadURL(snapshot.ref))
       })
@@ -76,10 +95,11 @@ const Form = ({reportType}) => {
         // sets the imageURL not by setting state, but by creating a shallow copy of the initial state and inputing the imageURL
         // doing this because if i try to setState for imageURL then post the report, it will post even before the imageURL has been updated
         // is there a better way to do this with async await? 
-        const report = {...values,imageURL:url,uid:authDetails.uid,
+        const generateReport = {...report,imageURL:url,uid:authDetails.uid,
         username:authDetails.username}
-        set( newReportRef, report)
+        set( newReportRef, generateReport)
       })
+    }
   }
  
  
@@ -99,7 +119,7 @@ const Form = ({reportType}) => {
                     <div className="space-y-6"> <label htmlFor="petName" className="block text-sm font-medium leading-6 text-gray-900">
                         Pet's Name
                       </label>
-                      <FormRow name="petName" type="text" placeholder="Pet's name" handleChange={handleChange}/>
+                      <FormRow name="petName" type="text" value={report.petName} placeholder={"Pet's name"} handleChange={handleChange}/>
                     </div>                     
                     }
                      
@@ -111,7 +131,7 @@ const Form = ({reportType}) => {
                       </label>
                       <div className='h-100'> <p> </p></div>
                         
-                      <FormRow name="respondsTo" type="text" placeholder="Responds to" handleChange={handleChange}/>
+                      <FormRow name="respondsTo" type="text" value={report.respondsTo} placeholder="Responds to" handleChange={handleChange}/>
                       </div>                     
                     }
 
@@ -120,39 +140,39 @@ const Form = ({reportType}) => {
                       <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                         Species
                       </label>
-                      <FormRowSelect name="category" value={values.category} options={["dog","cat","bird","rabbit","hamster","others"]} handleChange={handleChange}/>
+                      <FormRowSelect name="category" value={report.category} options={["dog","cat","bird","rabbit","hamster","others"]} handleChange={handleChange}/>
                       
                       {/*Gender*/}
                       <label htmlFor="gender" className="block text-sm font-medium leading-6 text-gray-900">
                         Gender
                       </label>
-                      <FormRowSelect name="gender"  value={values.gender} options={["male","female"]} handleChange={handleChange}/>
+                      <FormRowSelect name="gender"  value={report.gender} options={["male","female"]} handleChange={handleChange}/>
                       
                       {/*Last Seen*/}
                       <label htmlFor="lastSeen" className="block text-sm font-medium leading-6 text-gray-900">
                         Last seen
                       </label>
-                      <FormRow name="lastSeen" type="text" placeholder="postal code" handleChange={handleChange}/>
+                      <FormRow name="lastSeen" type="text"  value={report.lastSeen} placeholder="postal code" handleChange={handleChange}/>
                      
                       
                       {/*Contact Number  CHECK WITH SAMUEL HOW TO LIMIT NUMBER OF CHARACTERS*/}
                       <label htmlFor="contactNumber" className="block text-sm font-medium leading-6 text-gray-900">
                        Contact Number 
                       </label>
-                      <FormRow name="contactNumber" type="number" placeholder="Contact number" handleChange={handleChange}/>
+                      <FormRow name="contactNumber" type="number" value={report.contactNumber}  placeholder="Contact number" handleChange={handleChange}/>
 
                       {/*Micro Chip Number*/}
                       <label htmlFor="microChipNumber" className="block text-sm font-medium leading-6 text-gray-900">
                        Micro chip Number 
                       </label>
-                      <FormRow name="microChipNumber"  type="number" placeholder="Microchip number" handleChange={handleChange}/>
+                      <FormRow name="microChipNumber"  type="number" value={report.microChipNumber} placeholder="Microchip number" handleChange={handleChange}/>
 
                        {/*Description*/}                  
            
-                       <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                       <label htmlFor="description"  className="block text-sm font-medium leading-6 text-gray-900">
                         Description
                        </label>
-                       <TextArea name="description" placeholder="More details..."/>
+                       <TextArea name="description" value={report.description} placeholder="More details..."/>
                         
                   
 
@@ -197,7 +217,7 @@ const Form = ({reportType}) => {
                     className="inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                     onClick={handleSubmit}
                   >
-                    Submit
+                    {report.isEditing ? "Update" : "Submit"}
                   </button>
                 </div>
               </div>

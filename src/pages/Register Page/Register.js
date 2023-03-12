@@ -47,6 +47,8 @@ const Register = () => {
           username: user.displayName,
           profileUrl: user.photoURL,
         });
+        localStorage.setItem('uid', user.uid)
+        localStorage.setItem('username', user.email)
         
         navigate("/feed");
       })
@@ -67,6 +69,8 @@ const Register = () => {
         set(ref(db, "users/" + user.uid), {
           username: user.email,
         });
+        localStorage.setItem('uid', user.uid)
+        localStorage.setItem('username', user.email)
         navigate("/feed");
          
          

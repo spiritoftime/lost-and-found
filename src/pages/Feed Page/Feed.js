@@ -15,15 +15,18 @@ const Feed = () => {
  const {values,setValues} =useAppContext()
  useEffect(()=>{
   onChildAdded(reportRef, (data) => {      
+    console.log(data)
+
+   
 
     setValues((report)=>{
 
-      return ({...report,allReports:[...report.allReports,data.val()]})
+      return ({...report,allReports:[...report.allReports,{...data.val(),reportId:data.ref._path.pieces_[1]}]})
 
     })
   
-    // setPosts([...posts,data.val()])
-    console.log(data.val())
+     
+    console.log(data.ref._path.pieces_[1])
     
   }
   )
