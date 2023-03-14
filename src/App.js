@@ -28,7 +28,6 @@ function App() {
         <Route path="/missing" element={<Missing/>}/>
         <Route path="/spotted" element={<Spotted/>}/>
         <Route path="/myReport" element={<MyReport/>}/>
-
       </Routes>
     </BrowserRouter>
   );

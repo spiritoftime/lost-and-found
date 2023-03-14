@@ -13,6 +13,15 @@ const reportRef = ref(database, DB_REPORT_KEY);
 const Feed = () => {
   const { values, setValues } = useAppContext();
   useEffect(() => {
+    setValues((report) => {
+      return {
+        ...report,
+        allReports: [],
+      };
+    });
+
+
+    console.log("use effect running")
     onChildAdded(reportRef, (data) => {
       setValues((report) => {
         return {
