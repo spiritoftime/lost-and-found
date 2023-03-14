@@ -43,6 +43,7 @@ const Profile = () => {
     setImageDetails({
       imgName: acceptedFiles[0].name,
       preview: URL.createObjectURL(acceptedFiles[0]),
+      profileImage: acceptedFiles[0],
     });
   }, []);
   const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
@@ -58,7 +59,9 @@ const Profile = () => {
       noKeyboard: true,
     });
   const changeUserDetails = (e) => {
+    console.log(e.profileUrl);
     if (e.profileUrl.length === 0) {
+      // if no file uploaded by user
       set(ref(db, "users/" + authDetails.uid), {
         ...authDetails,
         username: e.username,
@@ -71,7 +74,9 @@ const Profile = () => {
       });
     } else {
       const imageStorageRef = sRef(storage, imageDetails.imgName.split(".")[0]);
-      uploadBytes(imageStorageRef, e.profileUrl).then((snapshot) => {
+      uploadBytes(imageStorageRef, imageDetails.profileImage, {
+        contentType: "image/png",
+      }).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
           set(ref(db, "users/" + authDetails.uid), {
             ...authDetails,
@@ -79,16 +84,15 @@ const Profile = () => {
             contactNumber: e.contactNumber,
             profileUrl: url,
           });
+          setAuthDetails((prevAuth) => {
+            return {
+              ...prevAuth,
+              username: e.name,
+              contactNumber: e.contactNumber,
+              profileUrl: url,
+            };
+          });
         });
-      });
-
-      setAuthDetails((prevAuth) => {
-        return {
-          ...prevAuth,
-          username: e.name,
-          contactNumber: e.contactNumber,
-          profileUrl: e.profileUrl,
-        };
       });
     }
   };
