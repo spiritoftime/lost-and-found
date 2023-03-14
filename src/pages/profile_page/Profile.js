@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import FormLabel from "../../components/FormLabel";
 import FormRow from "../../components/FormRow";
@@ -21,7 +21,7 @@ const Profile = () => {
   const db = getDatabase();
   const storage = getStorage();
   const { authDetails, setAuthDetails } = useAppContext();
-  console.log(authDetails);
+
   const [imageDetails, setImageDetails] = useState({
     preview: authDetails.profileUrl,
   });
@@ -29,6 +29,8 @@ const Profile = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    unregister,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(YupProfileSchema),
@@ -40,10 +42,10 @@ const Profile = () => {
   });
 
   const onDrop = useCallback((acceptedFiles) => {
+    setValue("profileUrl", acceptedFiles[0]);
     setImageDetails({
       imgName: acceptedFiles[0].name,
       preview: URL.createObjectURL(acceptedFiles[0]),
-      profileImage: acceptedFiles[0],
     });
   }, []);
   const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
@@ -58,9 +60,14 @@ const Profile = () => {
       },
       noKeyboard: true,
     });
+  useEffect(() => {
+    register("profileUrl");
+    return () => {
+      unregister("profileUrl");
+    };
+  }, [register, unregister]);
   const changeUserDetails = (e) => {
-    console.log(e.profileUrl);
-    if (e.profileUrl.length === 0) {
+    if (!e.profileUrl) {
       // if no file uploaded by user
       set(ref(db, "users/" + authDetails.uid), {
         ...authDetails,
@@ -74,7 +81,7 @@ const Profile = () => {
       });
     } else {
       const imageStorageRef = sRef(storage, imageDetails.imgName.split(".")[0]);
-      uploadBytes(imageStorageRef, imageDetails.profileImage, {
+      uploadBytes(imageStorageRef, e.profileUrl, {
         contentType: "image/png",
       }).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
@@ -161,7 +168,7 @@ const Profile = () => {
                   <span>Upload an image file</span>
                   <SquareFormInput
                     getInputProps={getInputProps}
-                    register={register}
+                    // register={register}
                     errors={errors}
                     id="profileUrl"
                     name="file-upload"

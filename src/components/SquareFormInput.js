@@ -27,7 +27,6 @@ const SquareFormInput = ({
     <>
       <input
         {...getInputProps()}
-        {...register(id)}
         className=" w-full border-black border-2 sr-only"
         type={type}
         id={id}
