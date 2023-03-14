@@ -11,61 +11,46 @@ import { YupProfileSchema } from "./YupProfileSchema";
 import emptyAvatar from "../../images/empty-avatar.png";
 import RoundButton from "../../components/RoundButton";
 import { getDatabase, ref, set } from "firebase/database";
+import useDrop from "./useDrop";
 import {
   getStorage,
   ref as sRef,
   getDownloadURL,
   uploadBytes,
 } from "firebase/storage";
+import DragDrop from "./DragDrop";
 const Profile = () => {
   const db = getDatabase();
   const storage = getStorage();
   const { authDetails, setAuthDetails } = useAppContext();
-
   const [imageDetails, setImageDetails] = useState({
     preview: authDetails.profileUrl,
   });
-
   const {
+    getInputProps,
+    errors,
+    getRootProps,
     register,
     handleSubmit,
+    fileRejections,
     setValue,
-    unregister,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(YupProfileSchema),
-    defaultValues: {
+  } = useDrop(
+    (acceptedFiles) => {
+      setValue("profileUrl", acceptedFiles[0]); // the name must match!
+      // this is what you want to do when the user drags and drops an image
+      setImageDetails({
+        imgName: acceptedFiles[0].name,
+        preview: URL.createObjectURL(acceptedFiles[0]),
+      });
+    },
+    YupProfileSchema,
+    {
       username: authDetails.username,
       contactNumber: authDetails.contactNumber,
       profileUrl: authDetails.profileUrl,
     },
-  });
-
-  const onDrop = useCallback((acceptedFiles) => {
-    setValue("profileUrl", acceptedFiles[0]);
-    setImageDetails({
-      imgName: acceptedFiles[0].name,
-      preview: URL.createObjectURL(acceptedFiles[0]),
-    });
-  }, []);
-  const { acceptedFiles, getRootProps, getInputProps, fileRejections } =
-    useDropzone({
-      onDrop,
-      maxFiles: 1,
-      accept: {
-        "image/png": [".png"],
-        "image/webp": [".webp"],
-        "image/jpeg": [".jpeg", ".jpg"],
-        "image/avif": [".avif"],
-      },
-      noKeyboard: true,
-    });
-  useEffect(() => {
-    register("profileUrl");
-    return () => {
-      unregister("profileUrl");
-    };
-  }, [register, unregister]);
+    "profileUrl"
+  );
   const changeUserDetails = (e) => {
     if (!e.profileUrl) {
       // if no file uploaded by user
@@ -82,7 +67,7 @@ const Profile = () => {
     } else {
       const imageStorageRef = sRef(storage, imageDetails.imgName.split(".")[0]);
       uploadBytes(imageStorageRef, e.profileUrl, {
-        contentType: "image/png",
+        contentType: e.profileUrl.type,
       }).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
           set(ref(db, "users/" + authDetails.uid), {
@@ -103,6 +88,7 @@ const Profile = () => {
       });
     }
   };
+  // for use if you want to show the rejected files and errors
   const fileRejectionItems = fileRejections.map(({ file, errors }) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
@@ -141,49 +127,13 @@ const Profile = () => {
       <div className="flex  gap-2">
         <div className="w-full">
           <FormLabel label="Profile Picture" htmlFor="profile" />
-          <div
-            {...getRootProps({ className: "dropzone" })}
-            className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
-          >
-            <div className="space-y-1 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-                <path
-                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <div className="flex text-sm text-gray-600">
-                <div
-                  htmlFor="profileUrl"
-                  className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                >
-                  <span>Upload an image file</span>
-                  <SquareFormInput
-                    getInputProps={getInputProps}
-                    // register={register}
-                    errors={errors}
-                    id="profileUrl"
-                    name="file-upload"
-                    type="file"
-                  />
-                </div>
-                <p className="pl-1">or drag and drop</p>
-              </div>
-              <p className="text-xs text-gray-500">
-                PNG, JPG, AVIF or WEBP up to 10MB
-              </p>
-            </div>
-          </div>
+          <DragDrop
+            getRootProps={getRootProps}
+            errors={errors}
+            getInputProps={getInputProps}
+          />
           {imageDetails.imgName ? <p>{imageDetails.imgName}</p> : ""}
-          {fileRejectionItems}
+          {/* {fileRejectionItems} */}
         </div>
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
