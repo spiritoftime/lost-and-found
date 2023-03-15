@@ -66,6 +66,8 @@ const Form = ({reportType}) => {
     updateReport(report)
   } else {
 
+  console.log("handlesubmit")
+
   // generate a name for the image 
   const generateImageName = (str) => {
     const strSplit = str.split('.')

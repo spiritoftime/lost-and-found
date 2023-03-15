@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { database, storage } from "../../firebase";
-import { onChildAdded, push, ref, set } from "firebase/database";
+import { onChildAdded,onChildRemoved, push, ref, set } from "firebase/database";
 import petImage from "../../images/petImage.jpeg";
 import NavBar from "../../components/NavBar";
 import Sort from "../../components/Sort";
@@ -13,6 +13,7 @@ const reportRef = ref(database, DB_REPORT_KEY);
 const Feed = () => {
   const { values, setValues } = useAppContext();
   useEffect(() => {
+    console.log("feed.js is rerendered")
     setValues((report) => {
       return {
         ...report,
@@ -32,10 +33,18 @@ const Feed = () => {
           ],
         };
       });
-
       console.log(data.ref._path.pieces_[1]);
     });
+
+    
+
+     
+
+
+
   }, []);
+
+  
 
   // console.log(values.allReports)
 

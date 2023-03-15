@@ -91,24 +91,25 @@ const {values,setValues} =useAppContext()
     {/*Status Filter  */}
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Status</h5>
     <div className="grid grid-cols-2"> 
-        <CheckBox name={"reportType"} value={"missing"} handleChange={handleChange}/>
-        <CheckBox  name={"reportType"} value={"spotted"} handleChange={handleChange}/>        
+    <CheckBox name={"reportType"} value={"all"} handleChange={handleChange} checked={values.reportType==="all"}/>
+        <CheckBox name={"reportType"} value={"missing"} handleChange={handleChange} checked={values.reportType==="missing"}/>
+        <CheckBox  name={"reportType"} value={"spotted"} handleChange={handleChange} checked={values.reportType==="spotted"}/>        
     </div>
     {/*Category Filter  */}
     <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>    
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Category</h5>
     <div className="grid grid-cols-3">
     {category.map((c,index)=>{
-        return  <CheckBox key={index} value={c} name={"category"} handleChange={handleChange}/>
+        return  <CheckBox key={index} value={c} name={"category"} handleChange={handleChange} checked={values.category===c}/>
     })}
     </div>
     {/*Gender Filter  */}
     <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>    
     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gender</h5>
     <div className="grid grid-cols-3"> 
-        <CheckBox name={"gender"} value={"all"} handleChange={handleChange}/>
-        <CheckBox name={"gender"} value={"male"} handleChange={handleChange}/>        
-        <CheckBox name={"gender"} value={"female"} handleChange={handleChange}/>    
+        <CheckBox name={"gender"} value={"all"} handleChange={handleChange} checked={values.gender==="all"}/>
+        <CheckBox name={"gender"} value={"male"} handleChange={handleChange} checked={values.gender==="male"}/>        
+        <CheckBox name={"gender"} value={"female"} handleChange={handleChange} checked={values.gender==="female"}/>    
     </div>
 
     <button
