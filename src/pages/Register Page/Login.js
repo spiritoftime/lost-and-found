@@ -39,8 +39,8 @@ const Login = () => {
           .then((snapshot) => {
             if (snapshot.exists()) {
               setAuthDetails({ ...snapshot.val(), uid: user.uid });
-              localStorage.setItem('uid', user.uid)
-              localStorage.setItem('username', user.email)
+              sessionStorage.setItem("uid", user.uid);
+              sessionStorage.setItem("username", user.email);
               navigate("/feed");
             } else {
               set(ref(db, "users/" + user.uid), {
@@ -52,9 +52,8 @@ const Login = () => {
                 username: user.displayName,
                 uid: user.uid,
               });
-              
+
               navigate("/feed");
-             
             }
           })
           .catch((error) => {
@@ -75,8 +74,8 @@ const Login = () => {
           .then((snapshot) => {
             if (snapshot.exists()) {
               setAuthDetails({ ...snapshot.val(), uid: user.uid });
-              localStorage.setItem('uid', user.uid)
-              localStorage.setItem('username', user.email)
+              localStorage.setItem("uid", user.uid);
+              localStorage.setItem("username", user.email);
             } else {
               console.log("No data available");
             }
@@ -84,7 +83,7 @@ const Login = () => {
           .catch((error) => {
             console.log(error);
           });
-          navigate("/feed");
+        navigate("/feed");
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -1,6 +1,6 @@
 import React from "react";
 import SquareFormInput from "../../components/SquareFormInput";
-const DragDrop = ({ getRootProps, errors, getInputProps }) => {
+const DragDrop = ({ getRootProps, errors, getInputProps, id }) => {
   return (
     <div
       {...getRootProps({ className: "dropzone" })}
@@ -23,7 +23,7 @@ const DragDrop = ({ getRootProps, errors, getInputProps }) => {
         </svg>
         <div className="flex text-sm text-gray-600">
           <div
-            htmlFor="profileUrl"
+            htmlFor={id}
             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
           >
             <span>Upload an image file</span>
@@ -31,7 +31,7 @@ const DragDrop = ({ getRootProps, errors, getInputProps }) => {
               getInputProps={getInputProps}
               // register={register}
               errors={errors}
-              id="profileUrl"
+              id={id}
               name="file-upload"
               type="file"
             />
