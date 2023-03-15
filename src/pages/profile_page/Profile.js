@@ -131,6 +131,7 @@ const Profile = () => {
             getRootProps={getRootProps}
             errors={errors}
             getInputProps={getInputProps}
+            id={"profileUrl"}
           />
           {imageDetails.imgName ? <p>{imageDetails.imgName}</p> : ""}
           {/* {fileRejectionItems} */}

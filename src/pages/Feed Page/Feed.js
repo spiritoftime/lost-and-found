@@ -13,16 +13,12 @@ const reportRef = ref(database, DB_REPORT_KEY);
 const Feed = () => {
   const { values, setValues } = useAppContext();
   useEffect(() => {
-    console.log("feed.js is rerendered")
     setValues((report) => {
       return {
         ...report,
         allReports: [],
       };
     });
-
-
-    console.log("use effect running")
     onChildAdded(reportRef, (data) => {
       setValues((report) => {
         return {
@@ -89,7 +85,7 @@ const Feed = () => {
                           <div>Category: {report.category}</div>
                           <div>Last seen: {report.lastSeen}</div>
                           <div>Contact no.: {report.contactNumber}</div>
-                          <div>Microchip no.: {report.contactNumber}</div>
+                          <div>Microchip no.: {report.microchipNumber}</div>
                         </div>
                         <a
                           href="#"
