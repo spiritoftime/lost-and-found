@@ -18,4 +18,7 @@ export const YupFormSchema = Yup.object().shape({
     .min(8, "Must be exactly 8 digits")
     .max(8, "Must be exactly 8 digits"),
   microChipNumber: Yup.string().required("please type in a microchip number"),
+  description: Yup.string().required(
+    "please type in extra details on your pet"
+  ),
 });

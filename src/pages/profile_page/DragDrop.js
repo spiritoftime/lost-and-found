@@ -29,7 +29,6 @@ const DragDrop = ({ getRootProps, errors, getInputProps, id }) => {
             <span>Upload an image file</span>
             <SquareFormInput
               getInputProps={getInputProps}
-              // register={register}
               errors={errors}
               id={id}
               name="file-upload"

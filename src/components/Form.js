@@ -34,7 +34,7 @@ const Form = ({ reportType }) => {
   // }
   // const [values, setValues] = useState(initialState)
   // stores image file uploaded by user
-  const [fileUpload, setFileUpload] = useState(report.imageURL);
+  const [fileUpload, setFileUpload] = useState("");
   const {
     getInputProps,
     errors,
@@ -52,79 +52,50 @@ const Form = ({ reportType }) => {
     {
       petName: report.petName,
       respondsTo: report.respondsTo,
-      category: report.species,
+      category: report.category,
       gender: report.gender,
       lastSeen: report.lastSeen,
       contactNumber: report.contactNumber,
       microChipNumber: report.microChipNumber,
-      imageURL: report.imageURL,
+      description: report.description,
     },
     "imageURL"
   );
-
-  // handle form changes
-  const handleChange = (e) => {
-    setReport({ ...report, [e.target.name]: e.target.value });
-  };
-
-  // handle user image input
-  //stores file in fileUpload state
-
-  //handle Update
-
-  const updateReport = (data) => {
-    console.log(update);
-
-    set(ref(database, `report/${data.reportId}`), data);
-
-    console.log("update report success");
-  };
 
   //handle Submit
   const makeReport = (e) => {
     console.log(e);
     console.log(e.imageURL);
 
-    if (report.isEditing === true) {
-      updateReport(report);
-    } else {
-      // generate a name for the image
-      const generateImageName = (str) => {
-        const strSplit = str.split(".");
-        return strSplit[0];
-      };
+    // upload the file in fileUploadstate to firebase Storage
 
-      // upload the file in fileUploadstate to firebase Storage
+    const storageRef = sRef(storage, `images/${e.imageURL.name}`);
 
-      const storageRef = sRef(storage, `images/${e.imageURL.name}`);
-
-      // once uploaded , generate the download URL , then post the report t
-      uploadBytes(storageRef, e.imageURL, {
-        contentType: e.imageURL.type,
+    // once uploaded , generate the download URL , then post the report t
+    uploadBytes(storageRef, e.imageURL, {
+      contentType: e.imageURL.type,
+    })
+      .then((snapshot) => {
+        return getDownloadURL(snapshot.ref);
       })
-        .then((snapshot) => {
-          return getDownloadURL(snapshot.ref);
-        })
-        .then((url) => {
-          console.log(url);
+      .then((url) => {
+        const reportListRef = ref(database, DB_REPORT_KEY);
+        let reportRef = "";
+        if (report.isEditing === false) reportRef = push(reportListRef);
+        else reportRef = ref(database, DB_REPORT_KEY + "/" + report.reportId);
+        console.log("working");
+        const generateReport = {
+          ...e,
+          imageURL: url,
+          uid: authDetails.uid,
+          username: authDetails.username,
+          reportType: report.reportType,
+        };
 
-          const reportListRef = ref(database, DB_REPORT_KEY);
-          const newReportRef = push(reportListRef);
+        set(reportRef, generateReport);
 
-          // sets the imageURL not by setting state, but by creating a shallow copy of the initial state and inputing the imageURL
-          // doing this because if i try to setState for imageURL then post the report, it will post even before the imageURL has been updated
-          // is there a better way to do this with async await?
-          const generateReport = {
-            ...e,
-            imageURL: url,
-            uid: authDetails.uid,
-            username: authDetails.username,
-            reportType: report.reportType,
-          };
-          set(newReportRef, generateReport);
-          navigate("/feed");
-        });
-    }
+        navigate("/feed");
+      });
   };
 
   return (
