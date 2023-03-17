@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { database, storage } from "../../firebase";
-import { onChildAdded,onChildRemoved, push, ref, set } from "firebase/database";
+import {
+  onChildAdded,
+  onChildRemoved,
+  push,
+  ref,
+  set,
+} from "firebase/database";
 import petImage from "../../images/petImage.jpeg";
 import NavBar from "../../components/NavBar";
 import Sort from "../../components/Sort";
@@ -31,16 +37,7 @@ const Feed = () => {
       });
       console.log(data.ref._path.pieces_[1]);
     });
-
-    
-
-     
-
-
-
   }, []);
-
-  
 
   // console.log(values.allReports)
 
@@ -67,7 +64,11 @@ const Feed = () => {
                     >
                       <div className="p-2">Reported by: {report.username}</div>
                       <a href="#">
-                        <img src={petImage} alt="" />
+                        <img
+                          src={report.imageURL}
+                          className="w-full object-cover aspect-[5/3]"
+                          alt=""
+                        />
                       </a>
                       <div
                         className={`p-2 tracking-wide text-center uppercase text-lg font-bold ${

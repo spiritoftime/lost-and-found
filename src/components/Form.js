@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { database, storage } from "../firebase";
 import { onChildAdded, push, ref, set, update } from "firebase/database";
 import { uploadBytes, getDownloadURL, ref as sRef } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 import FormRow from "./FormRow";
 import FormRowSelect from "./FormRowSelect";
@@ -13,6 +14,7 @@ import { YupFormSchema } from "./YupFormSchema";
 
 const DB_REPORT_KEY = "report";
 const Form = ({ reportType }) => {
+  const navigate = useNavigate();
   const { authDetails, report, setReport } = useAppContext();
 
   // stores states for forms
@@ -32,7 +34,7 @@ const Form = ({ reportType }) => {
   // }
   // const [values, setValues] = useState(initialState)
   // stores image file uploaded by user
-  const [fileUpload, setFileUpload] = useState("");
+  const [fileUpload, setFileUpload] = useState(report.imageURL);
   const {
     getInputProps,
     errors,
@@ -55,6 +57,7 @@ const Form = ({ reportType }) => {
       lastSeen: report.lastSeen,
       contactNumber: report.contactNumber,
       microChipNumber: report.microChipNumber,
+      imageURL: report.imageURL,
     },
     "imageURL"
   );
@@ -116,8 +119,10 @@ const Form = ({ reportType }) => {
             imageURL: url,
             uid: authDetails.uid,
             username: authDetails.username,
+            reportType: report.reportType,
           };
           set(newReportRef, generateReport);
+          navigate("/feed");
         });
     }
   };
