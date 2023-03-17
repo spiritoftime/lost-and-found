@@ -8,8 +8,8 @@ import FormRowSelect from "./FormRowSelect";
 import TextArea from "./TextArea";
 import { useAppContext } from "../context/appContext";
 import useDrop from "../pages/profile_page/useDrop";
-import { YupProfileSchema } from "../pages/profile_page/YupProfileSchema";
 import DragDrop from "../pages/profile_page/DragDrop";
+import { YupFormSchema } from "./YupFormSchema";
 
 const DB_REPORT_KEY = "report";
 const Form = ({ reportType }) => {
@@ -32,6 +32,7 @@ const Form = ({ reportType }) => {
   // }
   // const [values, setValues] = useState(initialState)
   // stores image file uploaded by user
+  const [fileUpload, setFileUpload] = useState("");
   const {
     getInputProps,
     errors,
@@ -42,23 +43,21 @@ const Form = ({ reportType }) => {
     setValue,
   } = useDrop(
     (acceptedFiles) => {
+      setValue("imageURL", acceptedFiles[0]);
       setFileUpload(acceptedFiles[0].name);
-      setValue("imageUrl", acceptedFiles[0]);
     },
-    YupProfileSchema,
+    YupFormSchema,
     {
       petName: report.petName,
       respondsTo: report.respondsTo,
-      species: report.species,
+      category: report.species,
       gender: report.gender,
       lastSeen: report.lastSeen,
       contactNumber: report.contactNumber,
       microChipNumber: report.microChipNumber,
     },
-    "imageUrl"
+    "imageURL"
   );
-  console.log(register);
-  const [fileUpload, setFileUpload] = useState("");
 
   // handle form changes
   const handleChange = (e) => {
@@ -80,29 +79,26 @@ const Form = ({ reportType }) => {
 
   //handle Submit
   const makeReport = (e) => {
-    e.preventDefault();
+    console.log(e);
+    console.log(e.imageURL);
 
-  if(report.isEditing === true){
-    updateReport(report)
-  } else {
+    if (report.isEditing === true) {
+      updateReport(report);
+    } else {
+      // generate a name for the image
+      const generateImageName = (str) => {
+        const strSplit = str.split(".");
+        return strSplit[0];
+      };
 
-  // generate a name for the image 
-  const generateImageName = (str) => {
-    const strSplit = str.split('.')
-    return strSplit[0]
-  }
-  
+      // upload the file in fileUploadstate to firebase Storage
 
-  
-
-  // upload the file in fileUploadstate to firebase Storage    
-  const fileName = generateImageName(fileUpload.name)
-  console.log(fileName)
-
-      const storageRef = sRef(storage, `images/${fileName}`);
+      const storageRef = sRef(storage, `images/${e.imageURL.name}`);
 
       // once uploaded , generate the download URL , then post the report t
-      uploadBytes(storageRef, report.fileUpload)
+      uploadBytes(storageRef, e.imageURL, {
+        contentType: e.imageURL.type,
+      })
         .then((snapshot) => {
           return getDownloadURL(snapshot.ref);
         })
@@ -116,7 +112,7 @@ const Form = ({ reportType }) => {
           // doing this because if i try to setState for imageURL then post the report, it will post even before the imageURL has been updated
           // is there a better way to do this with async await?
           const generateReport = {
-            ...report,
+            ...e,
             imageURL: url,
             uid: authDetails.uid,
             username: authDetails.username,
@@ -130,7 +126,7 @@ const Form = ({ reportType }) => {
     <>
       <div>
         <div className="mt-5 md:col-span-2 md:mt-0 h-full w-full">
-          <form action="#" method="POST">
+          <form onSubmit={handleSubmit(makeReport)}>
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                 {/*Name*/}
@@ -265,7 +261,11 @@ const Form = ({ reportType }) => {
                 >
                   Description
                 </label>
-                <TextArea name="description" placeholder="More details..." />
+                <TextArea
+                  register={register}
+                  name="description"
+                  placeholder="More details..."
+                />
 
                 <div>
                   <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -276,8 +276,9 @@ const Form = ({ reportType }) => {
                   getInputProps={getInputProps}
                   getRootProps={getRootProps}
                   errors={errors}
-                  id={"imageUrl"}
+                  id={"imageURL"}
                 />
+                {fileUpload ? <p>{fileUpload}</p> : ""}
               </div>
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button

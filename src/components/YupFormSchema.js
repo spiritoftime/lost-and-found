@@ -10,8 +10,8 @@ export const YupFormSchema = Yup.object().shape({
   lastSeen: Yup.string()
     .required("Please type in a valid postal code")
     .matches(/^[0-9]+$/, "Must be only digits")
-    .min(8, "Must be exactly 6 digits")
-    .max(8, "Must be exactly 6 digits"),
+    .min(6, "Must be exactly 6 digits")
+    .max(6, "Must be exactly 6 digits"),
   contactNumber: Yup.string()
     .required("Please type in a contact number")
     .matches(/^[0-9]+$/, "Must be only digits")
