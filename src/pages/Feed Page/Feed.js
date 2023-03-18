@@ -49,8 +49,8 @@ const Feed = () => {
 
   return (
     <>
-      <div className="grid grid-cols-5 ">
-        <div className="grid grid-cols-5 h-screen bg-slate-200">
+      <div className="grid grid-cols-5 w-screen ">
+        <div className="grid grid-cols-5 h-screen bg-slate-200 ">
           {/*- Filter Nav*/}
           <div className="  col-span-1   p-5 border-black">
             <Sort />
