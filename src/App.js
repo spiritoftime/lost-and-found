@@ -15,19 +15,21 @@ import NavBar from "./components/NavBar";
 import Missing from "./pages/Report Page/Missing";
 import Spotted from "./pages/Report Page/Spotted";
 import MyReport from "./pages/MyReport Page/MyReport";
+import Post from "./pages/post Page/Post";
 function App() {
   return (
     <BrowserRouter>
-    <NavBar/>
+      <NavBar />
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/report" element={<Report />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/feed" element={<Feed/>}/>
-        <Route path="/missing" element={<Missing/>}/>
-        <Route path="/spotted" element={<Spotted/>}/>
-        <Route path="/myReport" element={<MyReport/>}/>
+        <Route path="/feed" element={<Feed />} />
+        <Route path="/missing" element={<Missing />} />
+        <Route path="/spotted" element={<Spotted />} />
+        <Route path="/myReport" element={<MyReport />} />
+        <Route path="/post" element={<Post />} />
       </Routes>
     </BrowserRouter>
   );
