@@ -1,7 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-
-import Landing from "./pages/Report Page/Report";
+ 
 
 import { database } from "./firebase";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
@@ -16,11 +15,14 @@ import Missing from "./pages/Report Page/Missing";
 import Spotted from "./pages/Report Page/Spotted";
 import MyReport from "./pages/MyReport Page/MyReport";
 import Post from "./pages/post Page/Post";
+import Landing from "./pages/Landing Page/Landing";
+import Footer from "./components/Footer";
 function App() {
   return (
     <BrowserRouter>
       <NavBar />
       <Routes>
+      <Route path="/" element={<Landing/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/report" element={<Report />} />
@@ -31,6 +33,7 @@ function App() {
         <Route path="/myReport" element={<MyReport />} />
         <Route path="/post" element={<Post />} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }
