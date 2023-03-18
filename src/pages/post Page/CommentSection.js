@@ -22,7 +22,13 @@ const CommentSection = () => {
   return (
     <div>
       {comments.map((comment, idx) => {
-        return <Comment key={idx} comment={comment} />;
+        return (
+          <Comment
+            key={idx}
+            parentCommentKey={comment.commentId}
+            comment={comment}
+          />
+        );
       })}
     </div>
   );

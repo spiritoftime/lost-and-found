@@ -6,20 +6,11 @@ import { database } from "../../firebase";
 import { push, ref, set, serverTimestamp } from "firebase/database";
 import emptyAvatar from "../../images/empty-avatar.png";
 
-// sample comment data
-// const commentDocument = {
-//   commentBody: comment,
-//   replies: [],
-//   commentedAt: serverTimestamp(),
-//   commentedBy: authDetails.username,
-// };
-
 const DB_COMMENT_KEY = "comments";
 const CommentInput = ({ username }) => {
   const { report, setReport, authDetails, setComments, comments } =
     useAppContext();
   const [comment, setComment] = useState("");
-
   return (
     <div className="mx-4">
       <p className="text-xs">
@@ -34,22 +25,19 @@ const CommentInput = ({ username }) => {
       />
       <PurpleButton
         handleSubmit={(e) => {
-          const commentListRef = ref(
-            database,
-            `${DB_COMMENT_KEY}/${report.reportId}`
+          const commentListRef = push(
+            ref(database, `${DB_COMMENT_KEY}/${report.reportId}`)
           );
-          const commentKey = push(commentListRef);
           if (comment.trim() === "") return;
           const commentDocument = {
             commentBody: comment,
             replies: [],
             commentedAt: serverTimestamp(),
             commentedBy: authDetails.username,
-            commenterProfile: authDetails.profileUrl && emptyAvatar,
+            commenterProfile: emptyAvatar && authDetails.profileUrl,
             parent: null,
-            commentId: commentKey,
+            commentId: commentListRef.key,
           };
-          setComments([...comments, commentDocument]);
           set(commentListRef, commentDocument);
           setComment("");
         }}

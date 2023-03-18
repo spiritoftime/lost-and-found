@@ -3,8 +3,16 @@ import React, { useState } from "react";
 import PurpleButton from "../../components/PurpleButton";
 import { useAppContext } from "../../context/appContext";
 import { database } from "../../firebase";
-import { push, ref, set, serverTimestamp } from "firebase/database";
+import {
+  push,
+  get,
+  ref,
+  set,
+  serverTimestamp,
+  update,
+} from "firebase/database";
 import emptyAvatar from "../../images/empty-avatar.png";
+import setParentComment from "./setParentComment";
 
 // sample comment data
 // const commentDocument = {
@@ -15,7 +23,7 @@ import emptyAvatar from "../../images/empty-avatar.png";
 // };
 
 const DB_COMMENT_KEY = "comments";
-const ReplyInput = ({ username }) => {
+const ReplyInput = ({ username, parentCommentKey }) => {
   const { report, setReport, authDetails, setComments, comments } =
     useAppContext();
   const [reply, setReply] = useState("");
@@ -34,9 +42,16 @@ const ReplyInput = ({ username }) => {
       />
       <PurpleButton
         handleSubmit={(e) => {
-          const commentListRef = push(
-            ref(database, `${DB_COMMENT_KEY}/${report.reportId}`)
+          const parentCommentRef = ref(
+            database,
+            `${DB_COMMENT_KEY}/${report.reportId}/${parentCommentKey}`
           );
+          const commentKey = push(parentCommentRef).key;
+          const commentRef = ref(
+            database,
+            `${DB_COMMENT_KEY}/${report.reportId}/${commentKey}`
+          );
+          const updates = {};
           if (reply.trim() === "") return;
           const commentDocument = {
             commentBody: reply,
@@ -44,9 +59,13 @@ const ReplyInput = ({ username }) => {
             commentedAt: serverTimestamp(),
             commentedBy: authDetails.username,
             commenterProfile: authDetails.profileUrl && emptyAvatar,
+            parent: parentCommentRef.key,
+            commentId: commentKey,
           };
-          setComments([...comments, commentDocument]);
-          set(commentListRef, commentDocument);
+          set(commentRef, commentDocument);
+          setParentComment(parentCommentRef, commentKey);
+          console.log("gg");
+
           setReply("");
         }}
         label={"Comment"}
