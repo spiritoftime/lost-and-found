@@ -50,15 +50,104 @@ const Feed = () => {
   return (
     <>
       <div className="grid grid-cols-5 ">
-        {/*- Filter Nav*/}
-        <div className="  col-span-1   p-5 border-black">
-          <Sort />
-        </div>
+        <div className="grid grid-cols-5 h-screen bg-slate-200">
+          {/*- Filter Nav*/}
+          <div className="  col-span-1   p-5 border-black">
+            <Sort />
+          </div>
 
-        {/*- REPORT GRID*/}
+          {/*- REPORT GRID*/}
 
-        <div className=" col-span-4 p-5">
-          <div class=" bg-gray-200 text-sm text-gray-500 leading-none border-2 border-gray-200 rounded-full inline-flex">
+          <div className=" col-span-4 p-5">
+            <div class=" bg-gray-200 text-sm text-gray-500 leading-none border-2 border-gray-200 rounded-full inline-flex">
+              <button
+                onClick={() => setView("grid")}
+                className={
+                  view === "grid"
+                    ? " rounded-full  inline-flex items-center px-4 py-2 bg-white text-blue-400 "
+                    : " rounded-full inline-flex items-center transition-colors duration-100 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 px-4 py-2"
+                }
+                id="grid"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="fill-current w-4 h-4 mr-2"
+                >
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Grid</span>
+              </button>
+              <button
+                onClick={() => setView("list")}
+                className={
+                  view === "list"
+                    ? " rounded-full  inline-flex items-center px-4 py-2 bg-white text-blue-400 "
+                    : "rounded-full inline-flex items-center transition-colors duration-100 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 px-4 py-2"
+                }
+                id="list"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="fill-current w-4 h-4 mr-2"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>List</span>
+              </button>
+            </div>
+            <text className="ml-5">
+              {values.filteredReports.length} reports found{" "}
+            </text>
+            <hr class="h-px my-5 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+
+            {values.filteredReports.length === 0 ? (
+              <div className="mt-5">No Results...</div>
+            ) : (
+              <div>
+                <div
+                  className={
+                    view === "list"
+                      ? "grid grid-cols-1 gap-5"
+                      : "grid grid-cols-4 gap-5"
+                  }
+                >
+                  {values.filteredReports &&
+                    values.filteredReports.map((report, index) => {
+                      return view === "list" ? (
+                        <ListItem key={index} report={report} />
+                      ) : (
+                        <Card key={index} report={report}></Card>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className=" bg-gray-200 text-sm text-gray-500 leading-none border-2 border-gray-200 rounded-full inline-flex">
             <button
               onClick={() => setView("grid")}
               className={
@@ -78,7 +167,7 @@ const Feed = () => {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="fill-current w-4 h-4 mr-2"
+                className="fill-current w-4 h-4 mr-2"
               >
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
@@ -106,7 +195,7 @@ const Feed = () => {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="fill-current w-4 h-4 mr-2"
+                className="fill-current w-4 h-4 mr-2"
               >
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -121,7 +210,7 @@ const Feed = () => {
           <text className="ml-5">
             {values.filteredReports.length} reports found{" "}
           </text>
-          <hr class="h-px my-5 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+          <hr class="h-px my-5 bg-gray-300 border-0 dark:bg-gray-700"></hr>
 
           {values.filteredReports.length === 0 ? (
             <div className="mt-5">No Results...</div>
