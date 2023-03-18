@@ -13,13 +13,10 @@ import Sort from "../../components/Sort";
 import { useAppContext } from "../../context/appContext";
 import Card from "../../components/Card";
 import ListItem from "../../components/ListItem";
-
 //DB stuff
 import { useNavigate } from "react-router-dom";
-
 const DB_REPORT_KEY = "report";
 const reportRef = ref(database, DB_REPORT_KEY);
-
 const Feed = () => {
   const { values, setValues, setReport } = useAppContext();
   const navigate = useNavigate();
@@ -44,20 +41,15 @@ const Feed = () => {
       console.log(data.ref._path.pieces_[1]);
     });
   }, []);
-
   // console.log(values.allReports)
-
   return (
     <>
-      <div className="grid grid-cols-5 ">
-        <div className="grid grid-cols-5 h-screen bg-slate-200">
-          {/*- Filter Nav*/}
-          <div className="  col-span-1   p-5 border-black">
-            <Sort />
-          </div>
-
+      <div className="grid grid-cols-5 min-h-screen bg-slate-200">
+        {/*- Filter Nav*/}
+        <div className="  col-span-1   p-5 border-black">
+          <Sort />
+        </div>
         {/*- REPORT GRID*/}
-
         <div className=" col-span-4 p-5">
           <div class=" bg-gray-200 text-sm text-gray-500 leading-none border-2 border-gray-200 rounded-full inline-flex">
             <button
@@ -123,7 +115,6 @@ const Feed = () => {
             {values.filteredReports.length} reports found{" "}
           </text>
           <hr class="h-px my-5 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-
           {values.filteredReports.length === 0 ? (
             <div className="mt-5">No Results...</div>
           ) : (
@@ -151,5 +142,4 @@ const Feed = () => {
     </>
   );
 };
-
 export default Feed;
