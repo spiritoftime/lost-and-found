@@ -17,6 +17,7 @@ import MyReport from "./pages/MyReport Page/MyReport";
 import Post from "./pages/post Page/Post";
 import Landing from "./pages/Landing Page/Landing";
 import Footer from "./components/Footer";
+import Error from "./pages/Error Page/Error";
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
         <Route path="/spotted" element={<Spotted />} />
         <Route path="/myReport" element={<MyReport />} />
         <Route path="/post" element={<Post />} />
+        <Route path="/*" element={<Error />} />
       </Routes>
       <Footer/>
     </BrowserRouter>
