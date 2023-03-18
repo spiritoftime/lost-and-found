@@ -6,16 +6,16 @@ import {
   faLocationDot,
   faMicrochip,
 } from "@fortawesome/free-solid-svg-icons";
-import Tag from "./Tag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Tag from "./Tag";
 import { capitalize } from "@mui/material";
 const PostDetails = ({ report }) => {
   return (
     <div className="mx-4">
-      <p className="text-[#868e96] text-xs">
+      <p className="text-[#868e96] text-xs py-2">
         Posted by {report.username} {getDateDiff(report.createdAt)}
       </p>
-      <div className="flex">
+      <div className="flex gap-4">
         <img alt="" className="w-3/12" src={report.imageURL} />
         <div>
           {report.reportType === "missing" && (
@@ -38,7 +38,9 @@ const PostDetails = ({ report }) => {
               {<FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>}:{" "}
               {report.lastSeen}
             </li>
-            <li>Responds to: {report.respondsTo}</li>
+            {report.reportType === "missing" && (
+              <li>Responds to: {report.respondsTo}</li>
+            )}
             <li>
               Microchip Number{" "}
               {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/appContext";
 import petImage from "../../images/petImage.jpeg";
-import { getFirestore, doc, deleteDoc } from "firebase/firestore";
+
 import {
   onChildAdded,
   push,

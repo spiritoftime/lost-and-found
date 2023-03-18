@@ -15,10 +15,10 @@ import emptyAvatar from "../../images/empty-avatar.png";
 // };
 
 const DB_COMMENT_KEY = "comments";
-const CommentInput = ({ username }) => {
+const ReplyInput = ({ username }) => {
   const { report, setReport, authDetails, setComments, comments } =
     useAppContext();
-  const [comment, setComment] = useState("");
+  const [reply, setReply] = useState("");
 
   return (
     <div className="mx-4">
@@ -26,32 +26,28 @@ const CommentInput = ({ username }) => {
         Comment as <span className="text-blue-300">{capitalize(username)}</span>{" "}
       </p>
       <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        className="w-full border-2 border-gray-300"
+        value={reply}
+        onChange={(e) => setReply(e.target.value)}
+        className="w-full  border-2 border-gray-300"
         placeholder="What are your thoughts?"
         type="text"
       />
       <PurpleButton
         handleSubmit={(e) => {
-          const commentListRef = ref(
-            database,
-            `${DB_COMMENT_KEY}/${report.reportId}`
+          const commentListRef = push(
+            ref(database, `${DB_COMMENT_KEY}/${report.reportId}`)
           );
-          const commentKey = push(commentListRef);
-          if (comment.trim() === "") return;
+          if (reply.trim() === "") return;
           const commentDocument = {
-            commentBody: comment,
+            commentBody: reply,
             replies: [],
             commentedAt: serverTimestamp(),
             commentedBy: authDetails.username,
             commenterProfile: authDetails.profileUrl && emptyAvatar,
-            parent: null,
-            commentId: commentKey,
           };
           setComments([...comments, commentDocument]);
           set(commentListRef, commentDocument);
-          setComment("");
+          setReply("");
         }}
         label={"Comment"}
       />
@@ -59,4 +55,4 @@ const CommentInput = ({ username }) => {
   );
 };
 
-export default CommentInput;
+export default ReplyInput;
