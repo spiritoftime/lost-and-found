@@ -15,15 +15,16 @@ import Card from "../../components/Card";
 import ListItem from "../../components/ListItem";
  
 //DB stuff
-import { useNavigate } from "react-router-dom";
 
 const DB_REPORT_KEY = "report";
 const reportRef = ref(database, DB_REPORT_KEY);
 
 const Feed = () => {
-  const { values, setValues, setReport } = useAppContext();
-  const navigate = useNavigate();
+  
+
+
   const [view,setView]=useState("list")
+  const { values, setValues } = useAppContext();
   useEffect(() => {
     setValues((report) => {
       return {

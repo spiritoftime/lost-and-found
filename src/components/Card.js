@@ -1,6 +1,11 @@
 import React from 'react'
-
+import { useNavigate } from 'react-router';
+import { useAppContext } from '../context/appContext';
+ 
 const Card = ({report}) => {
+    const{setReport}=useAppContext()
+    const navigate = useNavigate();
+    
  
 
   return (
@@ -11,6 +16,10 @@ const Card = ({report}) => {
     <div className="p-2">Reported by: {report.username}</div>
     <a href="#">
       <img
+      onClick={() => {
+        setReport(report);
+        navigate("/post");
+      }}
         src={report.imageURL}
         className="w-full object-cover aspect-[5/3]"
         alt=""
