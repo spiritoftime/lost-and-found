@@ -8,6 +8,11 @@ const Tag = ({ reportType }) => {
         <p className="text-white">{capitalize(reportType)}</p>
       </div>
     );
+  return (
+    <div className="bg-orange-700 rounded-md w-fit px-2">
+      <p className="text-white">{capitalize(reportType)}</p>
+    </div>
+  );
 };
 
 export default Tag;

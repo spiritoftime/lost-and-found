@@ -131,7 +131,7 @@ const MyReport = () => {
                         to={
                           report.reportType === "missing"
                             ? "/missing"
-                            : "spotted"
+                            : "/spotted"
                         }
                       >
                         <span className="mr-2">Edit</span>

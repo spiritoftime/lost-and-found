@@ -17,7 +17,7 @@ import TextArea from "./TextArea";
 import { useAppContext } from "../context/appContext";
 import useDrop from "../pages/profile_page/useDrop";
 import DragDrop from "../pages/profile_page/DragDrop";
-import { YupFormSchema } from "./YupFormSchema";
+import { YupFormSchema, defaultValues } from "./YupFormSchema";
 
 const DB_REPORT_KEY = "report";
 const Form = ({ reportType }) => {
@@ -55,17 +55,8 @@ const Form = ({ reportType }) => {
       setValue("imageURL", acceptedFiles[0]);
       setFileUpload(acceptedFiles[0].name);
     },
-    YupFormSchema,
-    {
-      petName: report.petName,
-      respondsTo: report.respondsTo,
-      category: report.category,
-      gender: report.gender,
-      lastSeen: report.lastSeen,
-      contactNumber: report.contactNumber,
-      microChipNumber: report.microChipNumber,
-      description: report.description,
-    },
+    YupFormSchema(report.reportType),
+    defaultValues(report, report.reportType),
     "imageURL"
   );
 
