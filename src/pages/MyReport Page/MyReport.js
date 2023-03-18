@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/appContext";
 import petImage from "../../images/petImage.jpeg";
 import { getFirestore, doc, deleteDoc } from "firebase/firestore";
@@ -12,6 +12,7 @@ import {
   collection,
   remove,
 } from "firebase/database";
+
 import { database } from "../../firebase";
 
 const editIcon = (
@@ -50,7 +51,7 @@ const deleteIcon = (
 
 const MyReport = () => {
   const { report, setReport, authDetails } = useAppContext();
-
+  const navigate = useNavigate();
   const userReport = [];
 
   const editReport = (reportData) => {
@@ -98,6 +99,7 @@ const MyReport = () => {
                   <div className="p-2">Reported by: {report.username}</div>
                   <a href="#">
                     <img
+                      onClick={() => navigate("/post")}
                       className="w-full object-cover aspect-[5/3]"
                       src={report.imageURL}
                       alt={`poster's lovely pet`}

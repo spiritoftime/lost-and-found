@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { database, storage } from "../firebase";
-import { onChildAdded, push, ref, set, update } from "firebase/database";
+import {
+  onChildAdded,
+  push,
+  ref,
+  set,
+  update,
+  serverTimestamp,
+} from "firebase/database";
 import { uploadBytes, getDownloadURL, ref as sRef } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
@@ -64,9 +71,6 @@ const Form = ({ reportType }) => {
 
   //handle Submit
   const makeReport = (e) => {
-    console.log(e);
-    console.log(e.imageURL);
-
     // upload the file in fileUploadstate to firebase Storage
 
     const storageRef = sRef(storage, `images/${e.imageURL.name}`);
@@ -83,17 +87,19 @@ const Form = ({ reportType }) => {
         let reportRef = "";
         if (report.isEditing === false) reportRef = push(reportListRef);
         else reportRef = ref(database, DB_REPORT_KEY + "/" + report.reportId);
-        console.log("working");
         const generateReport = {
           ...e,
           imageURL: url,
           uid: authDetails.uid,
           username: authDetails.username,
           reportType: report.reportType,
+          createdAt: serverTimestamp(),
         };
 
         set(reportRef, generateReport);
-
+        setReport((prev) => {
+          return { ...prev, isEditing: false };
+        });
         navigate("/feed");
       });
   };

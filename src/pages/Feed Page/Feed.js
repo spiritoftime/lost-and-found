@@ -12,12 +12,14 @@ import NavBar from "../../components/NavBar";
 import Sort from "../../components/Sort";
 import { useAppContext } from "../../context/appContext";
 //DB stuff
+import { useNavigate } from "react-router-dom";
 
 const DB_REPORT_KEY = "report";
 const reportRef = ref(database, DB_REPORT_KEY);
 
 const Feed = () => {
-  const { values, setValues } = useAppContext();
+  const { values, setValues, setReport } = useAppContext();
+  const navigate = useNavigate();
   useEffect(() => {
     setValues((report) => {
       return {
@@ -65,6 +67,10 @@ const Feed = () => {
                       <div className="p-2">Reported by: {report.username}</div>
                       <a href="#">
                         <img
+                          onClick={() => {
+                            setReport(report);
+                            navigate("/post");
+                          }}
                           src={report.imageURL}
                           className="w-full object-cover aspect-[5/3]"
                           alt=""
@@ -86,7 +92,7 @@ const Feed = () => {
                           <div>Category: {report.category}</div>
                           <div>Last seen: {report.lastSeen}</div>
                           <div>Contact no.: {report.contactNumber}</div>
-                          <div>Microchip no.: {report.microchipNumber}</div>
+                          <div>Microchip no.: {report.microChipNumber}</div>
                         </div>
                         <a
                           href="#"
