@@ -17,7 +17,7 @@ const PostDetails = ({ report }) => {
       </p>
       <div className="flex gap-4">
         <img alt="" className="w-3/12" src={report.imageURL} />
-        <div>
+        <div className="">
           {report.reportType === "missing" && (
             <h2 className="text-2xl font-bold">{capitalize(report.petName)}</h2>
           )}

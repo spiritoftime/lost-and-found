@@ -24,8 +24,7 @@ import setParentComment from "./setParentComment";
 
 const DB_COMMENT_KEY = "comments";
 const ReplyInput = ({ username, parentCommentKey }) => {
-  const { report, setReport, authDetails, setComments, comments } =
-    useAppContext();
+  const { report, setReport, authDetails } = useAppContext();
   const [reply, setReply] = useState("");
 
   return (
@@ -58,7 +57,7 @@ const ReplyInput = ({ username, parentCommentKey }) => {
             replies: [],
             commentedAt: serverTimestamp(),
             commentedBy: authDetails.username,
-            commenterProfile: authDetails.profileUrl && emptyAvatar,
+            commenterProfile: emptyAvatar && authDetails.profileUrl,
             parent: parentCommentRef.key,
             commentId: commentKey,
           };

@@ -8,7 +8,7 @@ const Post = () => {
     useAppContext();
 
   return (
-    <div className="pt-12 min-h-screen bg-[#868e96] ">
+    <div className="pt-6 pb-6 min-h-screen bg-[#868e96] ">
       <div className="mx-12 bg-white flex flex-col gap-4 mt-4 border-white rounded-md border-2">
         <PostDetails report={report} />
         <CommentInput username={authDetails.username} />

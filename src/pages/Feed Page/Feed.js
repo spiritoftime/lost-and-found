@@ -28,7 +28,7 @@ const Feed = () => {
         allReports: [],
       };
     });
-    onChildAdded(reportRef, (data) => {
+    const cb = onChildAdded(reportRef, (data) => {
       setValues((report) => {
         return {
           ...report,
@@ -40,6 +40,7 @@ const Feed = () => {
       });
       console.log(data.ref._path.pieces_[1]);
     });
+    return () => cb();
   }, []);
   // console.log(values.allReports)
   return (

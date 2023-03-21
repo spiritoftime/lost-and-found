@@ -18,12 +18,12 @@ import { useAppContext } from "../context/appContext";
 import useDrop from "../pages/profile_page/useDrop";
 import DragDrop from "../pages/profile_page/DragDrop";
 import { YupFormSchema, defaultValues } from "./YupFormSchema";
+import useIsEditing from "../custom hooks/useIsEditing";
 
 const DB_REPORT_KEY = "report";
 const Form = ({ reportType }) => {
   const navigate = useNavigate();
   const { authDetails, report, setReport } = useAppContext();
-
   // stores states for forms
   // const initialState = {
   //   uid:"",
@@ -56,14 +56,31 @@ const Form = ({ reportType }) => {
       setFileUpload(acceptedFiles[0].name);
     },
     YupFormSchema(report.reportType),
-    defaultValues(report, report.reportType),
+    defaultValues(report, report.reportType, report.isEditing),
     "imageURL"
   );
 
   //handle Submit
   const makeReport = (e) => {
     // upload the file in fileUploadstate to firebase Storage
-
+    if (report.isEditing && !e.imageURL) {
+      const reportRef = ref(database, DB_REPORT_KEY + "/" + report.reportId);
+      const generateReport = {
+        ...e,
+        imageURL: report.imageURL,
+        uid: authDetails.uid,
+        username: authDetails.username,
+        reportType: report.reportType,
+        createdAt: serverTimestamp(),
+      };
+      set(reportRef, generateReport);
+      setReport((prev) => {
+        return {
+          isEditing: false,
+        };
+      });
+      navigate("/feed");
+    }
     const storageRef = sRef(storage, `images/${e.imageURL.name}`);
 
     // once uploaded , generate the download URL , then post the report t
