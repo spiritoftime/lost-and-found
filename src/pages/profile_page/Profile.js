@@ -103,7 +103,7 @@ const Profile = () => {
   return (
     <form
       onSubmit={handleSubmit(changeUserDetails)}
-      className="p-8 flex flex-col gap-4"
+      className="min-h-screen p-8 flex flex-col gap-4"
     >
       <h2 className="text-2xl font-medium">Edit Credentials</h2>
       <div className="flex flex-col gap-2">

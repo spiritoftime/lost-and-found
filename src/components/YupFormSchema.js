@@ -61,7 +61,6 @@ export const defaultValues = (report, reportType) => {
       description: report.description,
     };
   return {
-    respondsTo: report.respondsTo,
     category: report.category,
     gender: report.gender,
     lastSeen: report.lastSeen,

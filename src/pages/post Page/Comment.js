@@ -12,9 +12,9 @@ const Comment = ({ comment = "", parentCommentKey }) => {
   return (
     <div className=" px-4 flex flex-col">
       {<CommentHeader comment={comment} />}
-      <p className="pl-[32px]">{comment.commentBody}</p>
+      <p className="pl-[38px]">{comment.commentBody}</p>
       <div
-        className="pl-[32px] cursor-pointer"
+        className="pl-[38px] cursor-pointer"
         onClick={() => setShowTextArea(true)}
       >
         Reply <FontAwesomeIcon className="text-gray-700" icon={faComment} />

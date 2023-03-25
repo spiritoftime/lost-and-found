@@ -1,29 +1,26 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Form from '../../components/Form'
- 
- 
+import React from "react";
+import { Link } from "react-router-dom";
+import Form from "../../components/Form";
+
 const Missing = () => {
   return (
-    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">      
-    <div className="mt-10 flex flex-col w-1/2">
+    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">
+      <div className="mt-10 flex flex-col w-1/2">
         <div className="flex place-content-center">
-        <button
-          type="submit"
-          className="w-40 mb-5  rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-           
+          <button
+            type="submit"
+            className="w-40 mb-5  rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
-          <Link to="/report">Back</Link>
-        </button> 
+            <Link to="/report">Back</Link>
+          </button>
         </div>
-         
-        <div className=" w-full h-full">
-        <Form reportType={"missing"}/>
-        </div>
-       
-     </div>
-     </div>
-  )
-}
 
-export default Missing
+        <div className=" w-full h-full">
+          <Form reportType={"missing"} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Missing;

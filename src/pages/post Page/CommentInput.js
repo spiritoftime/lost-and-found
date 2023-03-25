@@ -8,8 +8,7 @@ import emptyAvatar from "../../images/empty-avatar.png";
 
 const DB_COMMENT_KEY = "comments";
 const CommentInput = ({ username }) => {
-  const { report, setReport, authDetails, setComments, comments } =
-    useAppContext();
+  const { report, setReport, authDetails } = useAppContext();
   const [comment, setComment] = useState("");
   return (
     <div className="mx-4">
