@@ -12,7 +12,7 @@ const SquareFormInput = ({
       <>
         <input
           {...register(id)}
-          className=" w-full border-black border-2"
+          className=" w-full "
           type={type}
           id={id}
         />

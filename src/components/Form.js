@@ -76,7 +76,8 @@ const Form = ({ reportType }) => {
       set(reportRef, generateReport);
       setReport((prev) => {
         return {
-          isEditing: false,
+           isEditing: false,
+          
         };
       });
       navigate("/feed");
@@ -168,7 +169,7 @@ const Form = ({ reportType }) => {
                   htmlFor="category"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Species
+                  Category
                 </label>
                 <FormRowSelect
                   register={register}

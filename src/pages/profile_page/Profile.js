@@ -101,6 +101,7 @@ const Profile = () => {
   ));
 
   return (
+    <div className="bg-slate-200">
     <form
       onSubmit={handleSubmit(changeUserDetails)}
       className="min-h-screen p-8 flex flex-col gap-4"
@@ -154,6 +155,7 @@ const Profile = () => {
         Save Changes
       </RoundButton>
     </form>
+    </div>
   );
 };
 

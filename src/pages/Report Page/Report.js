@@ -14,16 +14,16 @@ const Report = () => {
 
   return (
     <>
-      <div className="w-screen min-h-screen bg-slate-400 flex justify-center">
+      <div className="w-screen min-h-screen bg-slate-200 flex justify-center">
         {/*Display report options if !reportType*/}
 
-        <div className="flex flex-col justify-center content-center flex-wrap  w-5/6  ">
+        <div className="flex flex-col justify-center content-center flex-wrap  w-5/6 mb-10  ">
           {/*Title*/}
           <div className='mb-10 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white"'>
             I would like to make a ...{" "}
           </div>
 
-          <div className="flex flex-row gap-5 ">
+          <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-5  ">
             {/*Missing Card*/}
             <Link
               to="/missing"

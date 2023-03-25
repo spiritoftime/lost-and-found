@@ -5,8 +5,8 @@ import Form from '../../components/Form'
  
 const Spotted = () => {
   return (
-    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">      
-    <div className="mt-10 flex flex-col w-1/2">
+    <div className="w-screen min-h-screen bg-slate-200 flex justify-center">      
+    <div className="mt-10 flex flex-col w-5/6 md:w-1/2">
         <div className="flex place-content-center">
         <button
           type="submit"
@@ -17,7 +17,7 @@ const Spotted = () => {
         </button> 
         </div>
          
-        <div className=" w-full h-full">
+        <div className=" w-full h-full mb-10">
         <Form reportType={"spotted"}/>
         </div>  
    
