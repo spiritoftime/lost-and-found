@@ -23,7 +23,7 @@ import setParentComment from "./setParentComment";
 // };
 
 const DB_COMMENT_KEY = "comments";
-const ReplyInput = ({ username, parentCommentKey }) => {
+const ReplyInput = ({ username, parentCommentKey, parentCommentUsername }) => {
   const { report, setReport, authDetails } = useAppContext();
   const [reply, setReply] = useState("");
 
@@ -53,7 +53,7 @@ const ReplyInput = ({ username, parentCommentKey }) => {
           const updates = {};
           if (reply.trim() === "") return;
           const commentDocument = {
-            commentBody: reply,
+            commentBody: `@${parentCommentUsername} ` + reply,
             replies: [],
             commentedAt: serverTimestamp(),
             commentedBy: authDetails.username,

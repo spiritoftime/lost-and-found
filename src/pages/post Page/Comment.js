@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RoundButton from "../../components/RoundButton";
 import ReplyInput from "./ReplyInput";
 const DB_COMMENT_KEY = "comments";
-const Comment = ({ comment = "", parentCommentKey }) => {
+const Comment = ({ comment = "", parentCommentKey,parentCommentUsername }) => {
   const { authDetails, report } = useAppContext();
   const [showTextArea, setShowTextArea] = useState(false);
   return (
@@ -21,6 +21,7 @@ const Comment = ({ comment = "", parentCommentKey }) => {
         {showTextArea && (
           <ReplyInput
             parentCommentKey={comment.commentId}
+            parentCommentUsername={parentCommentUsername}
             username={authDetails.username}
           />
         )}

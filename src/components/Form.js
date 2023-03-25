@@ -115,7 +115,7 @@ const Form = ({ reportType }) => {
   return (
     <>
       <div>
-        <div className="mt-5 md:col-span-2 md:mt-0 h-full w-full">
+        <div className="mt-5 md:col-span-2 md:mt-0  w-full">
           <form onSubmit={handleSubmit(makeReport)}>
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white px-4 py-5 sm:p-6">

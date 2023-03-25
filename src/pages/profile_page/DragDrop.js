@@ -24,9 +24,12 @@ const DragDrop = ({ getRootProps, errors, getInputProps, id }) => {
         <div className="flex text-sm text-gray-600">
           <div
             htmlFor={id}
-            className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+            className="relative cursor-pointer rounded-md bg-white font-medium  focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
           >
-            <span>Upload an image file</span>
+            <p className="text-gray">
+              <span className="text-indigo-600">Upload an image file</span> or
+              drag and drop
+            </p>
             <SquareFormInput
               getInputProps={getInputProps}
               errors={errors}
@@ -35,7 +38,6 @@ const DragDrop = ({ getRootProps, errors, getInputProps, id }) => {
               type="file"
             />
           </div>
-          <p className="pl-1">or drag and drop</p>
         </div>
         <p className="text-xs text-gray-500">
           PNG, JPG, AVIF or WEBP up to 10MB

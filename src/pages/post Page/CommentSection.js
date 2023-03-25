@@ -26,6 +26,7 @@ const CommentSection = () => {
         return (
           <Comment
             key={idx}
+            parentCommentUsername={comment.commentedBy}
             parentCommentKey={comment.commentId}
             comment={comment}
           />
