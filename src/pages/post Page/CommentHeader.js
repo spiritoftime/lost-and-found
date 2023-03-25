@@ -1,3 +1,4 @@
+import { capitalize } from "@mui/material";
 import React from "react";
 import getDateDiff from "../../helper functions/convertTimestamp";
 const CommentHeader = ({ comment }) => {
@@ -8,8 +9,8 @@ const CommentHeader = ({ comment }) => {
         className="w-[30px] rounded-lg aspect-square"
         src={comment.commenterProfile}
       />
-      <p>
-        {comment.commentedBy} · {getDateDiff(comment.commentedAt)}
+      <p className="text-xs md:text-base">
+        {capitalize(comment.commentedBy)} · {getDateDiff(comment.commentedAt)}
       </p>
     </div>
   );

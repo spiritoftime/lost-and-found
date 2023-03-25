@@ -28,14 +28,14 @@ const ReplyInput = ({ username, parentCommentKey }) => {
   const [reply, setReply] = useState("");
 
   return (
-    <div className="mx-4">
+    <div className="mx-2 md:mx-4">
       <p className="text-xs">
         Comment as <span className="text-blue-300">{capitalize(username)}</span>{" "}
       </p>
       <textarea
         value={reply}
         onChange={(e) => setReply(e.target.value)}
-        className="w-full  border-2 border-gray-300"
+        className="w-full border-2 border-gray-300"
         placeholder="What are your thoughts?"
         type="text"
       />
@@ -63,7 +63,6 @@ const ReplyInput = ({ username, parentCommentKey }) => {
           };
           set(commentRef, commentDocument);
           setParentComment(parentCommentRef, commentKey);
-          console.log("gg");
 
           setReply("");
         }}

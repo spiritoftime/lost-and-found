@@ -15,13 +15,17 @@ const PostDetails = ({ report }) => {
       <p className="text-[#868e96] text-xs py-2">
         Posted by {report.username} {getDateDiff(report.createdAt)}
       </p>
-      <div className="flex gap-4">
-        <img alt="" className="w-3/12" src={report.imageURL} />
+      <div className="flex flex-col md:flex-row gap-4">
+        <img
+          alt=""
+          className="w-full md:w-5/12 lg:w-3/12"
+          src={report.imageURL}
+        />
         <div className="">
           {report.reportType === "missing" && (
             <h2 className="text-2xl font-bold">{capitalize(report.petName)}</h2>
           )}
-          <ul>
+          <ul className="text-xs md:text-base">
             <Tag reportType={report.reportType} />
             <li>
               {capitalize(report.gender)}{" "}
