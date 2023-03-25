@@ -31,7 +31,7 @@ const Card = ({ report }) => {
       </div>
       <div className="p-5">
         <div className="mb-5">
-          <div>Name: {report.petName}</div>
+          {report.reportType === "missing" && <div>Name: {report.petName}</div>}
           <div>Gender: {report.gender}</div>
           <div>Category: {report.category}</div>
           <div>Last seen: {report.lastSeen}</div>

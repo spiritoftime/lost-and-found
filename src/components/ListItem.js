@@ -23,10 +23,12 @@ const ListItem = ({ report }) => {
       </div>
 
       <div className="col-span-3 md:col-span-4 p-5 grid grid-cols-1 gap-2  ">
-        <div>
-          <text className="font-bold">Name: </text>
-          {report.petName}
-        </div>
+        {report.reportType === "missing" && (
+          <div>
+            <text className="font-bold">Name: </text>
+            {report.petName}
+          </div>
+        )}
         <div>
           <text className="font-bold">Contact: </text> {report.contactNumber}
         </div>
