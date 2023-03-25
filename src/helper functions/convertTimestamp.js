@@ -6,13 +6,10 @@ const formats = [
   { divideBy: 2419200000, unit: "month", limit: 12 },
 ];
 const checkFormatter = (format, limit) => {
-  if (format.unit === "minute" && +format.split(" ")[0] === 0)
-    return "1 min ago";
-  if (+format.split(" ")[0] > 0 && +format.split(" ")[0] < limit) return true;
+  if (+format.split(" ")[0] >= 0 && +format.split(" ")[0] < limit) return true;
 };
 const getDateDiff = (timestamp) => {
   const createdTime = new Date(timestamp);
-  console.log(createdTime);
   const currDate = new Date();
   const dateDiff = createdTime - currDate;
   const formatter = new Intl.RelativeTimeFormat("en", {

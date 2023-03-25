@@ -104,7 +104,7 @@ const Profile = () => {
     <div className="bg-slate-200">
     <form
       onSubmit={handleSubmit(changeUserDetails)}
-      className="min-h-screen p-8 flex flex-col gap-4"
+      className="p-8 flex flex-col gap-4"
     >
       <h2 className="text-2xl font-medium">Edit Credentials</h2>
       <div className="flex flex-col gap-2">
@@ -125,7 +125,7 @@ const Profile = () => {
           id="contactNumber"
         />
       </div>
-      <div className="flex  gap-2">
+      <div className="flex flex-col lg:flex-row gap-2">
         <div className="w-full">
           <FormLabel label="Profile Picture" htmlFor="profile" />
           <DragDrop
@@ -140,7 +140,7 @@ const Profile = () => {
         <div className="flex flex-col">
           <p className="text-center">Preview</p>
           <img
-            className="object-cover rounded-full w-[200px] aspect-square"
+            className="mx-auto object-cover rounded-full w-[200px] aspect-square"
             alt=""
             src={
               imageDetails.preview === undefined
@@ -151,7 +151,7 @@ const Profile = () => {
           />
         </div>
       </div>
-      <RoundButton type="submit" bgColorClass="max-w-2xl bg-indigo-600">
+      <RoundButton type="submit" bgColorClass=" max-w-2xl bg-indigo-600">
         Save Changes
       </RoundButton>
     </form>

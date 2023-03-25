@@ -56,13 +56,10 @@ const MyReport = () => {
 
   const editReport = (reportData) => {
     setReport({ ...reportData, isEditing: true });
-    console.log("test edit report");
   };
 
   const { setValues, values } = useAppContext();
   useEffect(() => {
-    //this rerenders multiple times for no reason
-    console.log("testtttt");
     setValues({
       ...values,
       userReports: [
@@ -116,7 +113,9 @@ const MyReport = () => {
                   </div>
                   <div className="p-5">
                     <div className="mb-5">
-                      <div>Name: {report.petName}</div>
+                      {report.reportType === "missing" && (
+                        <div>Name: {report.petName}</div>
+                      )}
                       <div>Gender: {report.gender}</div>
                       <div>Category: {report.category}</div>
                       <div>Last seen: {report.lastSeen}</div>
@@ -152,7 +151,7 @@ const MyReport = () => {
             })}
         </div>
       </div>
-      
+      \
     </>
   );
 };
