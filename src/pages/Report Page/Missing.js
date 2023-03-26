@@ -4,7 +4,7 @@ import Form from "../../components/Form";
 
 const Missing = () => {
   return (
-    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">
+    <div className="w-screen min-h-screen bg-slate-200 flex justify-center">
     <div className="pb-4 mt-10 flex flex-col w-11/12 md:w-8/12">
         <div className="flex place-content-center">
           <button
