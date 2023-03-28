@@ -66,40 +66,37 @@ const Feed = () => {
   // console.log(values.allReports)
   return (
     <>
-      <div className="grid xs:grid-cols-1 md:grid-cols-5 min-h-screen bg-slate-200">
+      <div className="md:hidden flex justify-center p-5 bg-slate-200">
+        <button
+          type="submit"
+          className="w-3/6 h-10 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          onClick={handleOpen}
+        >
+          Filter
+        </button>
+      </div>
+      <div className="grid gap-0 grid-rows-1  md:grid-cols-5 min-h-screen bg-slate-200">
         {/*- Filter Nav*/}
-        <div className="  hidden md:block col-span-1    p-5 border-black">
+        <div className="  hidden md:block col-span-1    p-5 ">
           <Sort />
         </div>
         {/*- REPORT GRID*/}
 
-        {/*- Filter button for mobile*/}
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          className="flex justify-center "
+        >
+          <div className="w-5/6 self-center">
+            {" "}
+            <Sort />
+          </div>
+        </Modal>
 
-        <div className="xs:block md:hidden flex justify-center p-5 ">
-          <button
-            type="submit"
-            className="w-3/6 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            onClick={handleOpen}
-          >
-            Filter
-          </button>
-
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            className="flex justify-center "
-          >
-            <div className="w-5/6 self-center">
-              {" "}
-              <Sort />
-            </div>
-          </Modal>
-        </div>
-
-        <div className=" xs:col-span-5 md:col-span-4  p-5  ">
-          <div class=" bg-gray-200 text-sm text-gray-500 leading-none   rounded-full inline-flex">
+        <div className="   xs:col-span-5 md:col-span-4  p-5  ">
+          <div class=" bg-slate-400 text-sm text-gray-500 leading-none   rounded-full inline-flex">
             <button
               onClick={() => setView("grid")}
               className={
@@ -165,7 +162,7 @@ const Feed = () => {
           </text>
           <hr class="h-px my-5 bg-gray-200   dark:bg-gray-700"></hr>
           {values.filteredReports.length === 0 ? (
-            <div className="mt-5 bg-indigo-200 border-10">No Results...</div>
+            <div className="mt-5   ">No Results...</div>
           ) : (
             <div className=" ">
               <div

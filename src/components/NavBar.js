@@ -5,7 +5,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import PurpleButton from "./PurpleButton";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
-
+import { useState } from "react";
+ 
 const navigation = [
   { name: "Home", link: "/", href: "#", current: true },
   { name: "Reports", link: "/feed", href: "#", current: false },
@@ -18,6 +19,7 @@ function classNames(...classes) {
 
 const NavBar = () => {
   const { authDetails, values } = useAppContext();
+  const [current,setCurrent]=useState("home")
 
   console.log();
   return (
@@ -57,12 +59,13 @@ const NavBar = () => {
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current
+                          item.name===current
                             ? "bg-gray-900 text-white"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
                           "rounded-md px-3 py-2 text-sm font-medium"
                         )}
                         aria-current={item.current ? "page" : undefined}
+                        onClick={()=>setCurrent(item.name)}
                         to={item.link}
                       >
                         {item.name}

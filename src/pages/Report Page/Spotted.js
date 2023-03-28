@@ -4,8 +4,8 @@ import Form from "../../components/Form";
 
 const Spotted = () => {
   return (
-    <div className="w-screen min-h-screen bg-slate-400 flex justify-center">
-      <div className="mt-10 flex flex-col pb-4 w-11/12 md:w-8/12">
+    <div className="w-screen min-h-screen bg-slate-200 flex justify-center">
+    <div className="mt-10 flex flex-col pb-4 w-11/12 md:w-8/12">
         <div className="flex place-content-center">
           <button
             type="submit"
@@ -14,13 +14,14 @@ const Spotted = () => {
             <Link to="/report">Back</Link>
           </button>
         </div>
-
+         
         <div className=" w-full h-full">
-          <Form reportType={"spotted"} />
-        </div>
-      </div>
-    </div>
-  );
-};
+        <Form reportType={"spotted"}/>
+        </div>  
+   
+     </div>
+     </div>
+  )
+}
 
 export default Spotted;

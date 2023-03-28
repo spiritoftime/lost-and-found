@@ -83,9 +83,9 @@ const MyReport = () => {
 
   return (
     <>
-      <div className="p-10 min-h-screen">
+      <div className="p-10 bg-slate-200 min-h-screen">
         <h5 className="text-xl pb-5 font-medium">My Reports</h5>
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid xs:grid-cols-1 lg:grid-cols-4 gap-5">
           {values.userReports &&
             values.userReports.map((report, index) => {
               return (
@@ -151,6 +151,7 @@ const MyReport = () => {
             })}
         </div>
       </div>
+      
     </>
   );
 };
