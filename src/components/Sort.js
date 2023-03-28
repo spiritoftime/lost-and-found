@@ -106,7 +106,7 @@ const Sort = () => {
       <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         Category
       </h5>
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 gap-x-2">
         {category.map((c, index) => {
           return (
             <CheckBox
