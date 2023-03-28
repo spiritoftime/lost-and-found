@@ -6,6 +6,13 @@ import PurpleButton from "./PurpleButton";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
 import { useState } from "react";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from 'firebase/auth'
+import { auth } from '../firebase'
  
 const navigation = [
   { name: "Home", link: "/", href: "#", current: true },
@@ -18,7 +25,7 @@ function classNames(...classes) {
 }
 
 const NavBar = () => {
-  const { authDetails, values } = useAppContext();
+  const { authDetails,setAuthDetails, values } = useAppContext();
   const [current,setCurrent]=useState("home")
 
   console.log();
@@ -158,15 +165,22 @@ const NavBar = () => {
                         </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
-                            <a
+                            <button
                               href="#"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
+
+                              onClick={()=>{
+                                signOut(auth)
+                                console.log("signout")
+                                setAuthDetails({})
+
+                              }}
                             >
                               Sign out
-                            </a>
+                            </button>
                           )}
                         </Menu.Item>
                       </Menu.Items>
