@@ -60,6 +60,7 @@ const Feed = () => {
           ],
         };
       });
+      console.log(data.ref._path.pieces_[1]);
     });
     return () => cb();
   }, []);
