@@ -1,4 +1,4 @@
-import { capitalize } from "@mui/material";
+import capitalize from "../../helper functions/capitalizeWord";
 import React, { useState } from "react";
 import PurpleButton from "../../components/PurpleButton";
 import { useAppContext } from "../../context/appContext";
@@ -26,12 +26,16 @@ const DB_COMMENT_KEY = "comments";
 const ReplyInput = ({ username, parentCommentKey, parentCommentUsername }) => {
   const { report, setReport, authDetails } = useAppContext();
   const [reply, setReply] = useState("");
-
+  if (!username)
+    return ;
   return (
     <div className="mx-2 md:mx-4">
-      <p className="text-xs">
-        Comment as <span className="text-blue-300">{capitalize(username)}</span>{" "}
-      </p>
+      {username && (
+        <p className="text-xs">
+          Comment as{" "}
+          <span className="text-blue-300">{capitalize(username)}</span>{" "}
+        </p>
+      )}
       <textarea
         value={reply}
         onChange={(e) => setReply(e.target.value)}

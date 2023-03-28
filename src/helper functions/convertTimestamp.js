@@ -9,7 +9,6 @@ const checkFormatter = (format, limit) => {
   if (+format.split(" ")[0] >= 0 && +format.split(" ")[0] < limit) return true;
 };
 const getDateDiff = (timestamp) => {
-  if (!timestamp) return 
   const createdTime = new Date(timestamp);
   const currDate = new Date();
   const dateDiff = createdTime - currDate;

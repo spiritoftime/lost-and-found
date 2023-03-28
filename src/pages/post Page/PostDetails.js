@@ -8,8 +8,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tag from "./Tag";
-import { capitalize } from "@mui/material";
+import capitalize from "../../helper functions/capitalizeWord";
 const PostDetails = ({ report }) => {
+  console.log(report);
   return (
     <div className="mx-4">
       <p className="text-[#868e96] text-xs py-2">
