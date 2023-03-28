@@ -18,7 +18,6 @@ import { auth } from "../firebase";
 const navigation = [
   { name: "Home", link: "/", href: "#", current: true },
   { name: "Reports", link: "/feed", href: "#", current: false },
-  { name: "Resources", href: "#", current: false },
 ];
 
 function classNames(...classes) {

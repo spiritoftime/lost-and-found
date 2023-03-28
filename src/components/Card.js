@@ -36,7 +36,7 @@ const Card = ({ report }) => {
           <div>Category: {report.category}</div>
           <div>Last seen: {report.lastSeen}</div>
           <div>Contact no.: {report.contactNumber}</div>
-          <div>Microchip no.: {report.microchipNumber}</div>
+          <div>Microchip no.: {report.microChipNumber}</div>
         </div>
         <a
           href="#"
