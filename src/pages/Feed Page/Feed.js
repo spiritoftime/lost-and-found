@@ -17,19 +17,19 @@ import ListItem from "../../components/ListItem";
 import { useNavigate } from "react-router-dom";
 import PurpleButton from "../../components/PurpleButton";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 const style = {
-  position: 'absolute'  ,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -60,59 +60,41 @@ const Feed = () => {
           ],
         };
       });
-      console.log(data.ref._path.pieces_[1]);
     });
     return () => cb();
   }, []);
   // console.log(values.allReports)
   return (
     <>
-    <div className="md:hidden flex justify-center p-5 bg-slate-200">
-    <button
-        type="submit"
-        className="w-3/6 h-10 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-        onClick={handleOpen}
-     >
-                    Filter
-     </button>
- 
-
-
-    </div>
+      <div className="md:hidden flex justify-center p-5 bg-slate-200">
+        <button
+          type="submit"
+          className="w-3/6 h-10 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          onClick={handleOpen}
+        >
+          Filter
+        </button>
+      </div>
       <div className="grid gap-0 grid-rows-1  md:grid-cols-5 min-h-screen bg-slate-200">
         {/*- Filter Nav*/}
         <div className="  hidden md:block col-span-1    p-5 ">
           <Sort />
         </div>
         {/*- REPORT GRID*/}
-     
 
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          className="flex justify-center "
+        >
+          <div className="w-5/6 self-center">
+            {" "}
+            <Sort />
+          </div>
+        </Modal>
 
-        
-   
-      
-
-         
-
-      
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="flex justify-center "
-        
-      >
-        <div className="w-5/6 self-center">   <Sort/></div>
-    
-      </Modal>
-    
- 
-
-        
-
-
-      
         <div className="   xs:col-span-5 md:col-span-4  p-5  ">
           <div class=" bg-slate-400 text-sm text-gray-500 leading-none   rounded-full inline-flex">
             <button
@@ -174,7 +156,7 @@ const Feed = () => {
               <span>List</span>
             </button>
           </div>
-         
+
           <text className="ml-5 text-xs">
             {values.filteredReports.length} reports found{" "}
           </text>

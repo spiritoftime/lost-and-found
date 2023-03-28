@@ -1,9 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
- 
-
 import { database } from "./firebase";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Register from "./pages/Register Page/Register";
 import Login from "./pages/Register Page/Login";
@@ -23,7 +21,7 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <Routes>
-      <Route path="/" element={<Landing/>} />
+        <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/report" element={<Report />} />
@@ -35,7 +33,7 @@ function App() {
         <Route path="/post" element={<Post />} />
         <Route path="/*" element={<Error />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   );
 }
